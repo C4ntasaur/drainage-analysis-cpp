@@ -11,6 +11,5 @@ Thumbs.db
 
 # Ignore dependency managers' directories
 /CMakeFiles/
-CMakeLists.txt
 
 
