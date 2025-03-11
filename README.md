@@ -27,6 +27,7 @@ This project is a C++ implementation of a drainage analysis tool used to calcula
 
     ```bash
     git clone https://github.com/C4ntasaur/drainage-analysis-cpp
+    ```
 
 2. Navigate into the project directory:
 
@@ -54,6 +55,8 @@ This project is a C++ implementation of a drainage analysis tool used to calcula
     ```
 
 ## Usage
+
+Instructions coming soon. Working on a combined CLI / REPL use.
 
 ## License
 
