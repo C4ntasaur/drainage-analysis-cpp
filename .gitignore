@@ -1,0 +1,15 @@
+# Ignore directories
+/build/
+/test/
+
+# Ignore vscode
+.vscode/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore dependency managers' directories
+/CMakeFiles/
+
+
