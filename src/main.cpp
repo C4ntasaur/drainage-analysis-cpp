@@ -1,3 +1,13 @@
+/**
+ * @file main.cpp
+ * @author Ollie
+ * @brief .cpp file for main function
+ * @version 1.0.0
+ * @date 2025-03-11
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #include "argumentParser.h"
 #include "Map.h"
 #include "BMP.h"
