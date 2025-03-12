@@ -7,8 +7,7 @@ Drainage analysis written in C++ for the Advanced Programming coursework section
 1. [Overview](#overview)
 2. [Installation](#installation)
 3. [Usage](#usage)
-4. [Contributing](#contributing)
-5. [License](#license)
+4. [License](#license)
 
 ## Overview
 
@@ -57,6 +56,17 @@ This project is a C++ implementation of a drainage analysis tool used to calcula
 ## Usage
 
 Instructions coming soon. Working on a combined CLI / REPL use.
+
+### REPL / Interactive Mode
+
+Called by use of -int or --interactive flags from the CLI.
+
+    ```bash
+    ./drainage_analysis -int
+    ```
+      ```bash
+    ./drainage_analysis --interactive
+    ```
 
 ## License
 
