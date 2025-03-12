@@ -3,84 +3,107 @@
 #include <set>
 #include <utility>
 
-// Constructor definition with template parameters elevationT, D8T, and DinfT
+/**
+ * @brief Construct a new Flow Accumulator<elevationT, D8T, DinfT>:: Flow Accumulator object
+ */
 template <typename elevationT, typename D8T, typename DinfT>
 FlowAccumulator<elevationT, D8T, DinfT>::FlowAccumulator(const Map<elevationT>& elevation, 
                                                          const Map<DinfT>* aspect, 
                                                          const Map<DinfT>* G, 
                                                          const Map<D8T>* D8)
-    : elevationMap(elevation), aspectMap(aspect), gradientMap(G), D8Map(D8)
+    : _elevationMap(elevation), _aspectMap(aspect), _gradientMap(G), _D8Map(D8),
+    _flowMap(elevation.getWidth(), elevation.getHeight())
 {
-    width = elevationMap.getWidth();
-    height = elevationMap.getHeight();
+    _width = _elevationMap.getWidth();
+    _height = _elevationMap.getHeight();
 }
 
-// Accumulate flow based on the method (D8 or Dinf)
+/**
+ * @brief Delegating method to call specific flow accumulation algorithms
+ */
 template <typename elevationT, typename D8T, typename DinfT>
 Map<elevationT> FlowAccumulator<elevationT, D8T, DinfT>::accumulateFlow(const std::string& method) {
-    Map<elevationT> flowMap(width, height);
-
     if (method == "d8") {
-        accumulateD8(flowMap);
+        if (!_D8Map) {
+            std::cerr << "Error: D8 map is null. Cannot perform D8 flow accumulation." << std::endl;
+            return _flowMap;
+        }
+        accumulateD8(_flowMap);
     }
     else if (method == "dinf") {
-        accumulateDinf(flowMap);
+        if (!_aspectMap) {
+            std::cerr << "Error: aspect map is null. Cannot perform Dinf flow accumulation." << std::endl;
+            return _flowMap;
+        }
+        accumulateDinf(_flowMap);
     }
     else if (method == "mdf") {
-        accumulateMDF(flowMap);
+        if (!_gradientMap) {
+            std::cerr << "Error: gradient map is null. Cannot perform MDF flow accumulation." << std::endl;
+            return _flowMap;
+        }
+        accumulateMDF(_flowMap);
     }
     else {
         std::cerr << "Unknown method: " << method << std::endl;
-        return flowMap;
+        return _flowMap;
     }
-
-    return flowMap;
+    return _flowMap;
 }
 
-// Accumulate flow for the D8 method
+/**
+ * @brief D8 flow accumulation algorithm
+ */
 template <typename elevationT, typename D8T, typename DinfT>
-void FlowAccumulator<elevationT, D8T, DinfT>::accumulateD8(Map<elevationT>& flowMap) {
-    // D8 directions for D8FlowAnalysis
+void FlowAccumulator<elevationT, D8T, DinfT>::accumulateD8(Map<elevationT>& _flowMap) {
+    // D8 directions where index in dx/dy correspond to D8 number
     int dx[] = {1, 1, 0, -1, -1, -1, 0, 1};
     int dy[] = {0, 1, 1, 1, 0, -1, -1, -1};
 
+    // Gather all cells by x, y coords and their elevatations in vector<tuple>
     std::vector<std::tuple<elevationT, int, int>> cells;
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            elevationT elevation = elevationMap.getData(x, y); // assuming you have elevationMap
+    for (int y = 0; y < _height; y++) {
+        for (int x = 0; x < _width; x++) {
+            elevationT elevation = _elevationMap.getData(x, y);
             cells.emplace_back(elevation, x, y);
         }
     }
 
+    // Sort cells by elevation
     std::sort(cells.begin(), cells.end(), [](const auto& a, const auto& b) {
         return std::get<0>(a) > std::get<0>(b); // descending elevation
     });
 
-
+    // Iterate over all cells
     for (const auto& [elevation, x, y] : cells) {
-        flowMap.setData(x, y, flowMap.getData(x, y) + 1.0);
+        _flowMap.setData(x, y, _flowMap.getData(x, y) + 1.0); // Adding 1 to each cell visited
         
-        D8T direction = D8Map->getData(x, y);  // Get direction from D8Map
+        D8T direction = _D8Map->getData(x, y);  // Get direction from D8Map
         if (direction == -1) {
-            continue; // Skip no dir
+            continue; // Skip no direction (ends loop)
         }
 
+        // New directions
         int nx = x + dx[direction];
         int ny = y + dy[direction];
 
-        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
-            flowMap.setData(nx, ny, flowMap.getData(nx, ny) + flowMap.getData(x, y));
+        // Out of bounds check
+        if (nx >= 0 && nx < _width && ny >= 0 && ny < _height) {
+            _flowMap.setData(nx, ny, _flowMap.getData(nx, ny) + _flowMap.getData(x, y));
         }
     }
 }
 
+/**
+ * @brief Dinf Flow Algorithm (Tarboton 1997)
+ */
 template <typename elevationT, typename D8T, typename DinfT>
-void FlowAccumulator<elevationT, D8T, DinfT>::accumulateDinf(Map<elevationT>& flowMap) {    
+void FlowAccumulator<elevationT, D8T, DinfT>::accumulateDinf(Map<elevationT>& _flowMap) {    
     // Gather cells
     std::vector<std::tuple<elevationT, int, int>> cells;
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            elevationT elevation = elevationMap.getData(x, y);
+    for (int y = 0; y < _height; y++) {
+        for (int x = 0; x < _width; x++) {
+            elevationT elevation = _elevationMap.getData(x, y);
             cells.emplace_back(elevation, x, y);
         }
     }
@@ -91,15 +114,15 @@ void FlowAccumulator<elevationT, D8T, DinfT>::accumulateDinf(Map<elevationT>& fl
     });
 
     // Create a temporary map to store updates
-    Map<elevationT> newFlowMap = flowMap;
+    Map<elevationT> tempFlowMap = _flowMap;
 
     // Iterate by descending order
     for (const auto& [elevation, x, y] : cells) {
         // Init cell with water
-        newFlowMap.setData(x, y, newFlowMap.getData(x, y) + 1.0);
+        tempFlowMap.setData(x, y, tempFlowMap.getData(x, y) + 1.0);
         
         // Pull aspect (angle)
-        double theta = aspectMap->getData(x, y);
+        double theta = _aspectMap->getData(x, y);
         if (std::isnan(theta) || theta < 0) continue;  // Ensure aspect is valid
 
         // Find nearest two cells
@@ -112,8 +135,8 @@ void FlowAccumulator<elevationT, D8T, DinfT>::accumulateDinf(Map<elevationT>& fl
         int ny2 = y + dir2[1];
 
         // Out of bounds check
-        if (nx1 < 0 || ny1 < 0 || nx1 >= width || ny1 >= height) weighting1 = 0.0;
-        if (nx2 < 0 || ny2 < 0 || nx2 >= width || ny2 >= height) weighting2 = 0.0;
+        if (nx1 < 0 || ny1 < 0 || nx1 >= _width || ny1 >= _height) weighting1 = 0.0;
+        if (nx2 < 0 || ny2 < 0 || nx2 >= _width || ny2 >= _height) weighting2 = 0.0;
 
         // Normalize weights to ensure total sum is 1
         double weightSum = weighting1 + weighting2;
@@ -125,19 +148,22 @@ void FlowAccumulator<elevationT, D8T, DinfT>::accumulateDinf(Map<elevationT>& fl
         }
 
         // Accumulate flow
-        double flowValue = newFlowMap.getData(x, y);
+        double flowValue = tempFlowMap.getData(x, y);
         if (weighting1 > 0.0) {
-            newFlowMap.setData(nx1, ny1, newFlowMap.getData(nx1, ny1) + (flowValue * weighting1));
+            tempFlowMap.setData(nx1, ny1, tempFlowMap.getData(nx1, ny1) + (flowValue * weighting1));
         }
         if (weighting2 > 0.0) {
-            newFlowMap.setData(nx2, ny2, newFlowMap.getData(nx2, ny2) + (flowValue * weighting2));
+            tempFlowMap.setData(nx2, ny2, tempFlowMap.getData(nx2, ny2) + (flowValue * weighting2));
         }
     }
 
     // Copy the updated flow map back to the original
-    flowMap = newFlowMap;
+    _flowMap = tempFlowMap;
 }
 
+/**
+ * @brief Find two 'cardinal' directions for a given aspect as well as their weightings
+ */
 template <typename elevationT, typename D8T, typename DinfT>
 std::tuple<std::array<int, 2>, std::array<int, 2>, double, double> FlowAccumulator<elevationT, D8T, DinfT>::getNearestTwoDirections(double aspect) {
     // Ensure aspect is within [0, 360)
@@ -146,7 +172,7 @@ std::tuple<std::array<int, 2>, std::array<int, 2>, double, double> FlowAccumulat
         std::cerr << "Incorrect aspect used. Negative." << std::endl;
     }
 
-    // Angle to Direction lookup
+    // Angle to 'Cardinal' Direction lookup array
     const std::array<std::pair<double, std::array<int, 2>>, 9> D8_DIRECTIONS = {{
         {0.0, {0, -1}},   // N
         {45.0, {1, -1}},  // NE
@@ -156,37 +182,40 @@ std::tuple<std::array<int, 2>, std::array<int, 2>, double, double> FlowAccumulat
         {225.0, {-1, 1}}, // SW
         {270.0, {-1, 0}}, // W
         {315.0, {-1, -1}},//NW
-        {360.0, {0, -1}}  // N
+        {360.0, {0, -1}}  // N, added for wrapping
     }};
 
-
+    // Iterate over directions
     for (int i = 1; i < 9; i++) {
         if (aspect == D8_DIRECTIONS[i].first) {
+            // 1 to 0 weighting as there is only one valid direction
             return std::make_tuple(D8_DIRECTIONS[i].second, D8_DIRECTIONS[i-1].second, 1.0, 0.0);
         }
         if (aspect < D8_DIRECTIONS[i].first) {
+            // Weighting calculation based on difference of angles between aspect and cardinal aspects
             double w1 = (aspect - D8_DIRECTIONS[i-1].first) / (D8_DIRECTIONS[i].first - D8_DIRECTIONS[i-1].first);
             double w2 = 1.0 - w1;
             return std::make_tuple(D8_DIRECTIONS[i].second, D8_DIRECTIONS[i-1].second, w2, w1);
         }
     }
-    std::cerr << "UH OH BAD ASPECT" << std::endl;
+    std::cerr << "Bad aspect." << std::endl;
     return std::make_tuple(D8_DIRECTIONS[0].second, D8_DIRECTIONS[7].second, 1.0, 0.0); // This really shouldn't happen
 }
 
-
-
+/**
+ * @brief Multi-directional Flow flow accumulation method
+ */
 template <typename elevationT, typename D8T, typename DinfT>
-void FlowAccumulator<elevationT, D8T, DinfT>::accumulateMDF(Map<elevationT>& flowMap) {
+void FlowAccumulator<elevationT, D8T, DinfT>::accumulateMDF(Map<elevationT>& _flowMap) {
     // Init Neighbour directions
     int dx[] = {1, 1, 0, -1, -1, -1, 0, 1};
     int dy[] = {0, 1, 1, 1, 0, -1, -1, -1};
 
     // Gather cells
     std::vector<std::tuple<elevationT, int, int>> cells;
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            elevationT elevation = elevationMap.getData(x, y); // assuming you have elevationMap
+    for (int y = 0; y < _height; y++) {
+        for (int x = 0; x < _width; x++) {
+            elevationT elevation = _elevationMap.getData(x, y); // assuming you have elevationMap
             cells.emplace_back(elevation, x, y);
         }
     }
@@ -196,21 +225,27 @@ void FlowAccumulator<elevationT, D8T, DinfT>::accumulateMDF(Map<elevationT>& flo
         return std::get<0>(a) > std::get<0>(b); // descending
     });
 
-    // Iterate by descending elevation
+    // Iterate over descending elevation cells
     for (const auto& [elevation, x, y] : cells) {
-        // Init cell w/ water
-        flowMap.setData(x, y, flowMap.getData(x, y) + 1.0);
+        // Initialise cell with 1.0
+        _flowMap.setData(x, y, _flowMap.getData(x, y) + 1.0);
 
         // Pull elevation for comparison with neighbours
-        elevationT currentElevation = elevationMap.getData(x, y);
+        elevationT currentElevation = _elevationMap.getData(x, y);
+        // Stores vector of valid neighbour indexes
         std::vector<int> validIndexes;
+
+        // Iterate over directions (dx/dy)
         for (int i = 0; i < 8; i++) {
             int nx = x + dx[i];
             int ny = y + dy[i];
-            if (nx < 0 || nx >= elevationMap.getWidth() || ny < 0 || ny >= elevationMap.getHeight()) {
+
+            // Out of bounds check
+            if (nx < 0 || nx >= _width || ny < 0 || ny >= _height) {
                 continue;
             }
-            if (elevationMap.getData(nx, ny) < currentElevation) {
+            // Lower elevation check
+            if (_elevationMap.getData(nx, ny) < currentElevation) {
                 validIndexes.push_back(i);
             }
         }
@@ -220,26 +255,28 @@ void FlowAccumulator<elevationT, D8T, DinfT>::accumulateMDF(Map<elevationT>& flo
             continue;
         }
 
-        // iterate over valid neighbours for total slope
+        // Iterate over valid neighbours for total slope
         double overallSlope = 0.0;
         for (const int& i : validIndexes) {
             int nx = x + dx[i];
             int ny = y + dy[i];
-            overallSlope += gradientMap->getData(nx, ny);
+            overallSlope += _gradientMap->getData(nx, ny);
         }
+
+        // Flat area check
         if (overallSlope == 0.0) {
             continue;
         }
 
-        // iterate over neighbours again to distribute water
+        // iterate over neighbours again to distribute flow
         for (const int& i : validIndexes) {
             int nx = x + dx[i];
             int ny = y + dy[i];
             
-            double magnitude = gradientMap->getData(nx, ny);
+            double magnitude = _gradientMap->getData(nx, ny);
             double weight = magnitude / overallSlope;
             
-            flowMap.setData(nx, ny, flowMap.getData(nx, ny) + (flowMap.getData(x, y) * weight));
+            _flowMap.setData(nx, ny, _flowMap.getData(nx, ny) + (_flowMap.getData(x, y) * weight));
             
         }
     }   
@@ -247,7 +284,7 @@ void FlowAccumulator<elevationT, D8T, DinfT>::accumulateMDF(Map<elevationT>& flo
 
 
 
-// Explicit template instantiation for different types (double, int, etc.)
+// Explicit template instantiation for numeric types
 template class FlowAccumulator<double, int, int>;
 template class FlowAccumulator<float, int, int>;
 template class FlowAccumulator<int, int, int>;
