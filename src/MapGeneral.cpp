@@ -2,20 +2,27 @@
 #include <iostream>
 #include <cmath>
 
-// Constructors
+/**
+ * @brief Construct a new Map<T> object with 0,0 dimensions
+ */
 template <typename T>
 Map<T>::Map() {
     _width = 0;
     _height = 0;
 }
 
+/**
+ * @brief Construct a new Map<T> object with _width, _height dimensions
+ */
 template <typename T>
 Map<T>::Map(int w, int h) : _width(w), _height(h) {
     // Sets all positions to default T
     _mapData.resize(_height, std::vector<T>(_width));
 }
 
-// Public Methods
+/**
+ * @brief Get data from Map object at position x, y
+ */
 template <typename T>
 T Map<T>::getData(int x, int y) const {
     if (x < 0 || x >= _width || y < 0 || y >= _height) {
@@ -26,6 +33,9 @@ T Map<T>::getData(int x, int y) const {
     return _mapData[y][x];
 }
 
+/**
+ * @brief Set data at position x, y of Map object with value
+ */
 template <typename T>
 void Map<T>::setData(int x, int y, T value) {
     if (x < 0 || x >= _width || y < 0 || y >= _height) {
@@ -36,16 +46,25 @@ void Map<T>::setData(int x, int y, T value) {
     _mapData[y][x] = value;
 }
 
+/**
+ * @brief Return _width member from Map
+ */
 template <typename T>
 int Map<T>::getWidth(void) const{
     return _width;
 }
 
+/**
+ * @brief Return _height member from Map
+ */
 template <typename T>
 int Map<T>::getHeight(void) const{
     return _height;
 }
 
+/**
+ * @brief Apply scaling of type 'scale' to _mapData of Map object
+ */
 template <typename T>
 void Map<T>::applyScaling(const std::string& scale, double percentile) {
     if (scale == "log") {
