@@ -164,6 +164,10 @@ int main(int argc, char* argv[]) {
         SlopeAnalyser sAnalyser(elevationMap);
         GMap = sAnalyser.computeSlope("combined");
     }
+    else if (strcmp(process, "aspect") == 0) {
+        SlopeAnalyser sAnalyser(elevationMap);
+        aspectMap = sAnalyser.computeDirection();
+    }
     else {
         std::cerr << "Error: Unknown process: " << process << std::endl;
     }
@@ -297,6 +301,12 @@ int main(int argc, char* argv[]) {
             if (image_file) {
                 GMap.exportToImage(image_file, colour_type);
                 std::cout << "Saved slope map image to: " << image_file << std::endl;
+            }
+        }
+        else if (strcmp(process, "aspect") == 0) {
+            if (image_file) {
+                aspectMap.exportToImage(image_file, colour_type);
+                std::cout << "Saved aspect map image to: " << image_file << std::endl;
             }
         }
     }
