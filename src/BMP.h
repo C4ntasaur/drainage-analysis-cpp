@@ -1,14 +1,13 @@
-/*
-Header file for a very simple, write-only bitmap creator.
-This implementation only works with 24-bit output meaning only RGB and not RGBA. This was chosen for its simplicity and wider use over 32-bit.
-
-Have used typedef for BYTE, DWORD, etc. as this is how I learnt memory sizes from CS50. I know it is not typical.
-
-Structs were inspired by wingdi.h header by Microsoft https://learn.microsoft.com/en-gb/windows/win32/api/wingdi/.
-Headers give the correct binary preamble to ensure the file is recognised as a .bmp before any image data is read.
-
-
-*/
+/**
+ * @file BMP.h
+ * @author Ollie
+ * @brief BMP defintion and writing
+ * @version 1.0.0
+ * @date 2025-03-13
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 
 #ifndef BMP_H
 #define BMP_H
@@ -24,6 +23,16 @@ typedef uint32_t DWORD;
 typedef int32_t  LONG;
 typedef uint16_t WORD;
 
+
+/*
+This implementation only works with 24-bit output meaning only RGB and not RGBA. This was chosen for its simplicity and wider use over 32-bit.
+
+Have used typedef for BYTE, DWORD, etc. as this is how I learnt memory sizes from CS50. I know it is not typical.
+
+Structs were inspired by wingdi.h header by Microsoft https://learn.microsoft.com/en-gb/windows/win32/api/wingdi/.
+Headers give the correct binary preamble to ensure the file is recognised as a .bmp before any image data is read.
+
+*/
 struct BITMAPFILEHEADER {
     WORD   bfType;
     DWORD  bfSize;
@@ -62,7 +71,12 @@ public:
     RGBTRIPLE rgb;
     std::vector<RGBTRIPLE> data;
 
-    // Constructor    
+    /**
+     * @brief Construct a new BMP object
+     * 
+     * @param width
+     * @param height 
+     */
     BMP(int32_t width, int32_t height) {
         int rowSize = (width * 3 + 3) & ~3; // Row size (padded to 4 bytes)
         int imageSize = rowSize * height;
@@ -93,21 +107,32 @@ public:
         }
     }
 
+    /**
+     * @brief Write a new .bmp file.
+     * 
+     * @param filename Full file pathways and .bmp extension
+     */
     void write(const char* filename) {
+        // Open file
         std::ofstream outFile(filename, std::ios::binary);
+
+        // Check is open
         if (!outFile.is_open()) {
             std::cerr << "Could not open image file: " << filename << std::endl;
             return;
         }
 
+        // Write file headers
         outFile.write(reinterpret_cast<char*>(&FileHeader), sizeof(FileHeader));
         outFile.write(reinterpret_cast<char*>(&InfoHeader), sizeof(InfoHeader));
 
+        // Work out padding for 4 byte increments
         int rowSize = (InfoHeader.biWidth * 3 + 3) & ~3;
         int padding = rowSize - InfoHeader.biWidth * 3;
 
         BYTE paddingBytes[3] = {0, 0, 0};
 
+        // Iterate over pixel information to write to
         for (int i = 0; i < InfoHeader.biHeight; i++) {
             for (int j = 0; j < InfoHeader.biWidth; j++) {
                 RGBTRIPLE pixel = data[(i * InfoHeader.biWidth) + j];
@@ -117,17 +142,26 @@ public:
                 outFile.write(reinterpret_cast<char*>(paddingBytes), padding);
             }
         }
+        // Close file
         outFile.close();
     }
 
+    /**
+     * @brief Set pixel data to BMP object
+     * 
+     * @param x Position in row
+     * @param y Position in column
+     * @param pixel RGBTRIPLE data (B, G, R) 0-255
+     * @return * void 
+     */
     void setPixel(int x, int y, RGBTRIPLE pixel) {
+        // Check inbounds
         if (x >= 0 && x < InfoHeader.biWidth && y >= 0 && y < InfoHeader.biHeight) {
             data[(y * InfoHeader.biWidth) + x] = pixel;
         } else {
             std::cerr << "Error: Pixel out of bounds (" << x << ", " << y << ")\n";
         }
     }
-    
 };
 
 #endif
