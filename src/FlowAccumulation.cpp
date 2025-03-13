@@ -165,15 +165,14 @@ void FlowAccumulator<elevationT, D8T, DinfT>::accumulateDinf(Map<elevationT>& _f
  * @brief Find two 'cardinal' directions for a given aspect as well as their weightings
  */
 template <typename elevationT, typename D8T, typename DinfT>
-std::tuple<std::array<int, 2>, std::array<int, 2>, double, double> FlowAccumulator<elevationT, D8T, DinfT>::getNearestTwoDirections(double aspect) {
-    // Ensure aspect is within [0, 360)
+std::tuple<std::array<int, 2>, std::array<int, 2>, double, double> 
+FlowAccumulator<elevationT, D8T, DinfT>::getNearestTwoDirections(double aspect) {
+    // Normalize aspect to [0, 360)
     aspect = std::fmod(aspect, 360.0);
-    if (aspect < 0 || aspect > 360) {
-        std::cerr << "Incorrect aspect used. Negative." << std::endl;
-    }
+    if (aspect < 0) aspect += 360.0;  // Ensure non-negative
 
     // Angle to 'Cardinal' Direction lookup array
-    const std::array<std::pair<double, std::array<int, 2>>, 9> D8_DIRECTIONS = {{
+    const std::array<std::pair<double, std::array<int, 2>>, 8> D8_DIRECTIONS = {{
         {0.0, {0, -1}},   // N
         {45.0, {1, -1}},  // NE
         {90.0, {1, 0}},   // E
@@ -181,26 +180,36 @@ std::tuple<std::array<int, 2>, std::array<int, 2>, double, double> FlowAccumulat
         {180.0, {0, 1}},  // S
         {225.0, {-1, 1}}, // SW
         {270.0, {-1, 0}}, // W
-        {315.0, {-1, -1}},//NW
-        {360.0, {0, -1}}  // N, added for wrapping
+        {315.0, {-1, -1}} // NW
     }};
 
-    // Iterate over directions
-    for (int i = 1; i < 9; i++) {
-        if (aspect == D8_DIRECTIONS[i].first) {
-            // 1 to 0 weighting as there is only one valid direction
-            return std::make_tuple(D8_DIRECTIONS[i].second, D8_DIRECTIONS[i-1].second, 1.0, 0.0);
+    // Handle wrapping (aspect 315-360)
+    if (aspect >= 315.0) {
+        double w1 = (aspect - 315.0) / (360.0 - 315.0);  // Normalized weight for North
+        double w2 = 1.0 - w1;  // Remaining weight for NW
+        return std::make_tuple(D8_DIRECTIONS[0].second, D8_DIRECTIONS[7].second, w1, w2);
+    }
+
+    // Iterate over other directions
+    for (size_t i = 1; i < D8_DIRECTIONS.size(); ++i) {
+        if (std::fabs(aspect - D8_DIRECTIONS[i].first) < 1e-6) {
+            // Exact match to a cardinal direction
+            return std::make_tuple(D8_DIRECTIONS[i].second, D8_DIRECTIONS[i].second, 1.0, 0.0);
         }
         if (aspect < D8_DIRECTIONS[i].first) {
-            // Weighting calculation based on difference of angles between aspect and cardinal aspects
+            // Weight calculation based on angle difference
             double w1 = (aspect - D8_DIRECTIONS[i-1].first) / (D8_DIRECTIONS[i].first - D8_DIRECTIONS[i-1].first);
             double w2 = 1.0 - w1;
             return std::make_tuple(D8_DIRECTIONS[i].second, D8_DIRECTIONS[i-1].second, w2, w1);
         }
     }
-    std::cerr << "Bad aspect." << std::endl;
-    return std::make_tuple(D8_DIRECTIONS[0].second, D8_DIRECTIONS[7].second, 1.0, 0.0); // This really shouldn't happen
+
+    // This should never be reached now
+    std::cerr << "Unexpected aspect value encountered: " << aspect << std::endl;
+    return std::make_tuple(D8_DIRECTIONS[0].second, D8_DIRECTIONS[7].second, 1.0, 0.0);
 }
+
+
 
 /**
  * @brief Multi-directional Flow flow accumulation method
