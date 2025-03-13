@@ -1,3 +1,13 @@
+/**
+ * @file MapVector.cpp
+ * @author your name (you@domain.com)
+ * @brief Methods for vector type of Map object
+ * @version 1.0.1
+ * @date 2025-03-13
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #include "MapVector.h"
 #include <fstream>
 #include <sstream>
@@ -20,7 +30,7 @@ Map<std::vector<T>>::Map() {
 template <typename T>
 Map<std::vector<T>>::Map(int w, int h) : _width(w), _height(h) {
     // Sets all positions to default T
-    mapData.resize(height);
+    _mapData.resize(_height);
     for (int i = 0; i < _height; i++) {
         _mapData.resize(_width);
     }
