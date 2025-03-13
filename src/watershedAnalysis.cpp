@@ -285,10 +285,6 @@ Map<elevationT> watershedAnalysis<elevationT, D8T>::DinfWatershed(std::pair<int,
         for (int dir = 0; dir < 8; dir++) {
             int nx = x + dx[dir];
             int ny = y + dy[dir];
-
-            elevationT neighbourAspect = _aspectMap->getData(nx, ny);
-            elevationT neighbourSlope = _slopeMap->getData(nx, ny);
-
             // Out of bounds check
             if (nx < 0 || nx >= _width || ny < 0 || ny >= _height) {
                 continue;
@@ -298,6 +294,10 @@ Map<elevationT> watershedAnalysis<elevationT, D8T>::DinfWatershed(std::pair<int,
             if (visited.getData(nx, ny) != 0) {
                 continue;
             }
+            elevationT neighbourAspect = _aspectMap->getData(nx, ny);
+            elevationT neighbourSlope = _slopeMap->getData(nx, ny);
+
+            
             
             // Check flow into current
             std::pair<std::array<int, 2>, std::array<int, 2>> directions = getNearestTwoDirections(neighbourAspect);
@@ -325,14 +325,12 @@ Map<elevationT> watershedAnalysis<elevationT, D8T>::DinfWatershed(std::pair<int,
  */
 template <typename elevationT, typename D8T>
 std::pair<std::array<int, 2>, std::array<int, 2>> watershedAnalysis<elevationT, D8T>::getNearestTwoDirections(double aspect) {
-    // Ensure aspect is within [0, 360)
+    // Normalize aspect to [0, 360)
     aspect = std::fmod(aspect, 360.0);
-    if (aspect < 0 || aspect > 360) {
-        std::cerr << "Incorrect aspect used. Negative." << std::endl;
-    }
+    if (aspect < 0) aspect += 360.0;  // Ensure non-negative
 
     // Angle to 'Cardinal' Direction lookup array
-    const std::array<std::pair<double, std::array<int, 2>>, 9> D8_DIRECTIONS = {{
+    const std::array<std::pair<double, std::array<int, 2>>, 8> D8_DIRECTIONS = {{
         {0.0, {0, -1}},   // N
         {45.0, {1, -1}},  // NE
         {90.0, {1, 0}},   // E
@@ -340,22 +338,30 @@ std::pair<std::array<int, 2>, std::array<int, 2>> watershedAnalysis<elevationT, 
         {180.0, {0, 1}},  // S
         {225.0, {-1, 1}}, // SW
         {270.0, {-1, 0}}, // W
-        {315.0, {-1, -1}},// NW
-        {360.0, {0, -1}}  // N, added for wrapping
+        {315.0, {-1, -1}} // NW
     }};
 
-    // Iterate over directions to find the nearest two
-    for (int i = 1; i < 9; i++) {
-        if (aspect == D8_DIRECTIONS[i].first) {
-            return std::make_pair(D8_DIRECTIONS[i].second, D8_DIRECTIONS[i-1].second);
+    // Handle wrapping (aspect 315-360)
+    if (aspect >= 315.0) {
+        double w1 = (aspect - 315.0) / (360.0 - 315.0);  // Normalized weight for North
+        double w2 = 1.0 - w1;  // Remaining weight for NW
+        return std::make_pair(D8_DIRECTIONS[0].second, D8_DIRECTIONS[7].second);
+    }
+
+    // Iterate over other directions
+    for (size_t i = 1; i < D8_DIRECTIONS.size(); ++i) {
+        if (std::fabs(aspect - D8_DIRECTIONS[i].first) < 1e-6) {
+            // Exact match to a cardinal direction
+            return std::make_pair(D8_DIRECTIONS[i].second, D8_DIRECTIONS[i].second);
         }
         if (aspect < D8_DIRECTIONS[i].first) {
             return std::make_pair(D8_DIRECTIONS[i].second, D8_DIRECTIONS[i-1].second);
         }
     }
-    
-    std::cerr << "Bad aspect." << std::endl;
-    return std::make_pair(D8_DIRECTIONS[0].second, D8_DIRECTIONS[7].second); // This really shouldn't happen
+
+    // This should never be reached now
+    std::cerr << "Unexpected aspect value encountered: " << aspect << std::endl;
+    return std::make_pair(D8_DIRECTIONS[0].second, D8_DIRECTIONS[7].second);
 }
 
 /**
