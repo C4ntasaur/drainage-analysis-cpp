@@ -90,18 +90,6 @@ public:
     int getHeight(void) const;
 
     /**
-     * @brief Export of Map to .bmp image
-     * To be moved to another class soon
-     * .txt colourmaps to be implemented
-     * 
-     * @param filename Full file pathway to save .bmp to
-     * @param format Colour schemes
-     * @return true 
-     * @return false 
-     */
-    bool exportToImage(const std::string& filename, const std::string& format) const;
-
-    /**
      * @brief Method that fills sinks in Map.
      * Sinks are cells with lower elevation than all their neighbours in a 3x3 grid
      * Removed by increasing sink value to that of the lowest neighbour
@@ -179,56 +167,6 @@ private:
      * @return false 
      */
     bool saveToBin(const std::string& filename) const;
-
-    /**
-     * @brief Helper function for exportToImage().
-     * Saves Map as a .bmp where pixel colours are greyscale, white high.
-     * 
-     * @param filename Full file pathway with extension .bmp
-     * @return true 
-     * @return false 
-     */
-    bool exportToBW(const std::string& filename) const;
-
-    /**
-     * @brief Helper function for exportToImage().
-     * Saves Map as a .bmp where pixel colours are greyscale, black high.
-     * 
-     * @param filename Full file pathway with extension .bmp
-     * @return true 
-     * @return false 
-     */
-    bool exportToWB(const std::string& filename) const;
-
-    /**
-     * @brief Helper function for exportToImage().
-     * Saves Map as a .bmp where pixel colours are of DryWet colourmap.
-     * 
-     * @param filename Full file pathway with extension .bmp
-     * @return true 
-     * @return false 
-     */
-    bool exportToDryWet(const std::string& filename) const;
-
-    /**
-     * @brief Helper function for exportToImage().
-     * Saves Map as a .bmp where pixel colours are D8 colourmap.
-     * 
-     * @param filename Full file pathway with extension .bmp
-     * @return true 
-     * @return false 
-     */
-    bool exportToD8(const std::string& filename) const;
-
-    /**
-     * @brief Helper function for exportToImage().
-     * Saves Map as a .bmp where pixel colours are bluescale, dark blue high.
-     * 
-     * @param filename Full file pathway with extension .bmp
-     * @return true 
-     * @return false 
-     */
-    bool exportToSeaFloor(const std::string& filename) const;
 
     /**
      * @brief Check if current cell (x, y) is a sink by comparing elevations with neighbours
