@@ -117,7 +117,6 @@ int main(int argc, char* argv[]) {
     */
 
     Map<double> elevationMap;
-    std::cout << "Opening map" << std::endl;
     if (!elevationMap.loadFromFile(input_file, input_file_type)) {
         std::cerr << "File: " << input_file << " does not exist." << std::endl;
 
@@ -128,9 +127,7 @@ int main(int argc, char* argv[]) {
         delete[] process;
         return 1;
     }
-    std::cout << elevationMap.getData(0,0) << std::endl;
-    std::cout << elevationMap.getHeight() << std::endl;
-    std::cout << elevationMap.getWidth() << std::endl;
+    
     elevationMap.fillSinks();
     
     
@@ -201,7 +198,6 @@ int main(int argc, char* argv[]) {
             pourPoints = watershedAnalyser.getPourPoints(nPourPoints, "d8");
             int i = 0;
             for (const auto& p : pourPoints) {
-                std::cout << "Pour point: " << p.first << "," << p.second << std::endl;
                 std::cout << D8Map.getData(p.first, p.second) << std::endl;
                 Map<double> outputWatershed = watershedAnalyser.calculateWatershed(p, "d8");
                 outputWatershed.applyScaling("log");
@@ -229,7 +225,6 @@ int main(int argc, char* argv[]) {
 
             int i = 0;
             for (const auto& p : pourPoints) {
-                std::cout << "Pour point: " << p.first << "," << p.second << std::endl;
                 Map<double> outputWatershed = watershedAnalyserDINF.calculateWatershed(p, "dinf");
                 outputWatershed.applyScaling("log");
                 std::ostringstream oss;
@@ -251,8 +246,6 @@ int main(int argc, char* argv[]) {
 
             int i = 0;
             for (const auto& p : pourPoints) {
-                std::cout << "Pour point: " << p.first << "," << p.second << std::endl;
-                std::cout << D8Map.getData(p.first, p.second) << std::endl;
                 Map<double> outputWatershed = watershedAnalyser.calculateWatershed(p, "mdf");
                 outputWatershed.applyScaling("log");
                 std::ostringstream oss;
