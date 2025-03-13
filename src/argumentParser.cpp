@@ -1,8 +1,21 @@
+/**
+ * @file argumentParser.cpp
+ * @author Ollie
+ * @brief Argument parser for CLI arguments
+ * @version 1.0.0
+ * @date 2025-03-13
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #include "argumentParser.h"
 #include "CLIhelperFunctions.h"
 #include <iostream>
 #include <cstring>
 
+/**
+ * @brief Function to print help for user
+ */
 void printHelp() {
     std::cout << "Help: Use the following flags:" << std::endl;
     std::cout << "-i <input_file> : Specify input file (.csv, .txt, .bin)" << std::endl;
@@ -15,6 +28,9 @@ void printHelp() {
     std::cout << "-v, --verbose : Enable verbose output" << std::endl;
 }
 
+/**
+ * @brief Arguments parsers for CLI
+ */
 bool parseArguments(int argc, char* argv[], 
                      char*& input_file, 
                      char*& input_file_type,
@@ -27,16 +43,19 @@ bool parseArguments(int argc, char* argv[],
                      int& nPourPoints,
                      bool& verbose, 
                      char*& process) {
+    // Check minimum number of arguments
     if (argc < 2) {
         std::cout << "No flags provided. Use -h for help." << std::endl;
         return false;
     }
 
+    // Iterate over all flags
     for (int i = 1; i < argc; ++i) {
         if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
             printHelp();
             return false;
         }
+        // Check input
         else if (strcmp(argv[i], "-i") == 0 || strcmp(argv[i], "--input") == 0) {
             if (i + 1 < argc) {
                 // Free previously allocated memory if it exists
@@ -85,6 +104,7 @@ bool parseArguments(int argc, char* argv[],
                 return false;
             }
         }
+        // Check process
         else if (strcmp(argv[i], "-p") == 0 || strcmp(argv[i], "--process") == 0) {
             if (process != nullptr) {
                 std::cerr << "Error: Only one process can be specified." << std::endl;
@@ -99,15 +119,17 @@ bool parseArguments(int argc, char* argv[],
                 return false;
             }
         }
+        // Check if flow accumulation was selected
         else if (strcmp(argv[i], "-fa") == 0 || strcmp(argv[i], "--flowaccumulation") == 0) {
             totalFlow = true;
         }
+        // Check if watershed was selected
         else if (strcmp(argv[i], "-w") == 0 || strcmp(argv[i], "--watershed") == 0) {
             watershed = true;
             if (i + 1 < argc) {
                 if (isValidInteger(argv[i + 1])) {
                     nPourPoints = std::atoi(argv[i + 1]);
-                    i++;
+                    i++; // Skip to next argument
                     if (nPourPoints <= 0) {
                         std::cerr << "Error: -w flag requires a positive integer greater than 0 for Pour Points." << std::endl;
                         return false;
@@ -123,6 +145,7 @@ bool parseArguments(int argc, char* argv[],
                 return false;
             }
         }
+        // Check output
         else if (strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--output") == 0) {
             if (i + 1 < argc) {
                 output_file = new char[strlen(argv[i + 1]) + 1];
@@ -138,6 +161,7 @@ bool parseArguments(int argc, char* argv[],
                 return false;
             }
         }
+        // Check if image out was selected
         else if (strcmp(argv[i], "-img") == 0 || strcmp(argv[i], "--image") == 0) {
             if (i + 1 < argc) {
                 image_file = new char[strlen(argv[i + 1]) + 1];
@@ -168,8 +192,6 @@ bool parseArguments(int argc, char* argv[],
         else if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--verbose") == 0) {
             verbose = true;
         }
-        
-        
         else {
             std::cerr << "Error: Unknown flag: " << argv[i] << std::endl;
             return false;
