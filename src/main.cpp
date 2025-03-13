@@ -15,6 +15,7 @@
 #include "D8FlowAnalyser.h"
 #include "FlowAccumulation.h" 
 #include "watershedAnalysis.h"
+#include "ImageExport.h"
 
 #include <iostream>
 #include <sstream>
@@ -208,7 +209,7 @@ int main(int argc, char* argv[]) {
                 std::ostringstream oss;
                 oss << "../data/watershed_" << i << ".bmp";  // Format as "../data/watershed_i"
                 std::string filename = oss.str();
-                outputWatershed.exportToImage(filename, "g1");
+                ImageExport<double>::exportMapToImage(outputWatershed, filename, "g1");
                 i++;
             }
         }
@@ -234,7 +235,7 @@ int main(int argc, char* argv[]) {
                 std::ostringstream oss;
                 oss << "../data/watershed_" << i << ".bmp";  // Format as "../data/watershed_i"
                 std::string filename = oss.str();
-                outputWatershed.exportToImage(filename, "sf");
+                ImageExport<double>::exportMapToImage(outputWatershed, filename, "g1");
                 i++;
             }
         }
@@ -255,69 +256,68 @@ int main(int argc, char* argv[]) {
                 std::ostringstream oss;
                 oss << "../data/watershed_" << i << ".bmp";  // Format as "../data/watershed_i"
                 std::string filename = oss.str();
-                outputWatershed.exportToImage(filename, "g1");
+                ImageExport<double>::exportMapToImage(outputWatershed, filename, "g1");
                 i++;
             }
         }
     }
 
     // Output handling
-    if (totalFlow) {
+if (totalFlow) {
+    if (output_file) {
+        flowMap.saveToFile(output_file, input_file_type);
+        std::cout << "Saved ." << input_file_type << " file as " << output_file << std::endl;
+    }
+    if (image_file) {
+        flowMap.applyScaling("log");
+        ImageExport<double>::exportMapToImage(flowMap, image_file, colour_type);
+        std::cout << "Saved image file to: " << image_file << std::endl;
+    }
+}
+else {
+    if (strcmp(process, "d8") == 0) {
         if (output_file) {
-            flowMap.saveToFile(output_file, input_file_type);
-            std::cout << "Saved ." << input_file_type << " file as " << output_file << std::endl;
+            D8Map.saveToFile(output_file, input_file_type);
+            std::cout << "Saved D8 flow map as ." << input_file_type << " file: " << output_file << std::endl;
         }
         if (image_file) {
-            flowMap.applyScaling("log");
-            flowMap.exportToImage(image_file, colour_type);
-            std::cout << "Saved image file to: " << image_file << std::endl;
+            ImageExport<int>::exportMapToImage(D8Map, image_file, colour_type);
+            std::cout << "Saved D8 flow map image to: " << image_file << std::endl;
         }
     }
-    else {
-        if (strcmp(process, "d8") == 0) {
-            if (output_file) {
-                D8Map.saveToFile(output_file, input_file_type);
-                std::cout << "Saved D8 flow map as ." << input_file_type << " file: " << output_file << std::endl;
-            }
-            if (image_file) {
-                D8Map.exportToImage(image_file, colour_type);
-                std::cout << "Saved D8 flow map image to: " << image_file << std::endl;
-            }
+    else if (strcmp(process, "dinf") == 0) {
+        if (output_file) {
+            aspectMap.saveToFile(output_file, input_file_type);
+            std::cout << "Saved D∞ aspect map as ." << input_file_type << " file: " << output_file << std::endl;
         }
-        else if (strcmp(process, "dinf") == 0) {
-            if (output_file) {
-                aspectMap.saveToFile(output_file, input_file_type);
-                std::cout << "Saved D∞ aspect map as ." << input_file_type << " file: " << output_file << std::endl;
-            }
-            if (image_file) {
-                aspectMap.exportToImage(image_file, colour_type);
-                std::cout << "Saved D∞ aspect map image to: " << image_file << std::endl;
-            }
-        }
-        else if (strcmp(process, "mdf") == 0) {
-            std::cerr << "MDF process does not have output without Flow Accumulation (-fa). " << std::endl;
-        }
-        else if (strcmp(process, "slope") == 0) {
-            if (image_file) {
-                GMap.exportToImage(image_file, colour_type);
-                std::cout << "Saved slope map image to: " << image_file << std::endl;
-            }
-        }
-        else if (strcmp(process, "aspect") == 0) {
-            if (image_file) {
-                aspectMap.exportToImage(image_file, colour_type);
-                std::cout << "Saved aspect map image to: " << image_file << std::endl;
-            }
+        if (image_file) {
+            ImageExport<double>::exportMapToImage(aspectMap, image_file, colour_type);
+            std::cout << "Saved D∞ aspect map image to: " << image_file << std::endl;
         }
     }
+    else if (strcmp(process, "mdf") == 0) {
+        std::cerr << "MDF process does not have output without Flow Accumulation (-fa). " << std::endl;
+    }
+    else if (strcmp(process, "slope") == 0) {
+        if (image_file) {
+            ImageExport<double>::exportMapToImage(GMap, image_file, colour_type);
+            std::cout << "Saved slope map image to: " << image_file << std::endl;
+        }
+    }
+    else if (strcmp(process, "aspect") == 0) {
+        if (image_file) {
+            ImageExport<double>::exportMapToImage(aspectMap, image_file, colour_type);
+            std::cout << "Saved aspect map image to: " << image_file << std::endl;
+        }
+    }
+}
 
-
-    // Memory deletion
-    delete[] input_file;
-    delete[] input_file_type;
-    delete[] output_file;
-    delete[] image_file;
-    delete[] colour_type;
-    delete[] process;
-    return 0;
+// Memory deletion
+delete[] input_file;
+delete[] input_file_type;
+delete[] output_file;
+delete[] image_file;
+delete[] colour_type;
+delete[] process;
+return 0;
 }
