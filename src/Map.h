@@ -238,7 +238,7 @@ private:
      * @return true 
      * @return false 
      */
-    bool is_sink(int x, int y);
+    bool isSink(int x, int y);
 };
 
 #endif
