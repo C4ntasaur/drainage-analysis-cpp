@@ -1,19 +1,37 @@
+/**
+ * @file SobelAnalysis.cpp
+ * @author Methods and constructors for SlopeAnalyser object
+ * @brief 
+ * @version 0.1
+ * @date 2025-03-13
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
+
 #include "SobelAnalysis.h"
 
 #include <iostream>
 #include <cmath>
 #include <stdexcept>
 
+/**
+ * @brief Construct a new Slope Analyser< T>:: Slope Analyser object
+ */
 template <typename T>
-SlopeAnalyser<T>::SlopeAnalyser(const Map<T>& map) : elevationMap(map) {
-    if (map.getHeight() == 0 || map.getWidth() == 0) {
-        std::cerr << "Map cannot be empty." << std::endl;
+SlopeAnalyser<T>::SlopeAnalyser(const Map<T>& map) : _elevationMap(map),
+_height(map.getHeight()), _width(map.getWidth()) {
+    
+    if (_height == 0 || _width == 0) {
+        std::cerr << "Map for slopeAnalyser cannot be empty." << std::endl;
     }
 }
 
+/**
+ * @brief Delegation method for different gradient map algorithms
+ */
 template <typename T>
 Map<T> SlopeAnalyser<T>::computeSlope(const std::string& type) {
-
     if (type == "gx") {
         return computeSlopeGx(); 
     }
@@ -27,26 +45,24 @@ Map<T> SlopeAnalyser<T>::computeSlope(const std::string& type) {
         return computeDirection();
     }
     else {
-        int rows = elevationMap.getHeight();
-        int cols = elevationMap.getWidth();
         std::cerr << "Type: " << type << " not recognised." << std::endl;
-        return Map<T>(cols, rows);
+        return Map<T>(_width, _height);
     }
 }
 
+/**
+ * @brief Create gradient map of overall x, y magnitude
+ */
 template <typename T>
 Map<T> SlopeAnalyser<T>::computeSlopeCombined(void) {
-    int rows = elevationMap.getHeight();
-    int cols = elevationMap.getWidth();
-
-    T elevationValue;
-
-    Map<T> slopeMap(cols, rows);
+    // Create gradient map
+    Map<T> slopeMap(_width, _height);
     
-    for (int y = 0; y < rows; y++) {
-        for (int x = 0; x < cols; x++) {
+    // iterate for cell in _elevationMap
+    for (int y = 0; y < _height; y++) {
+        for (int x = 0; x < _width; x++) {
             int Gx = 0, Gy = 0;
-
+            // Iteratre for positions in sobel kernel
             for (int dy = -1; dy <= 1; dy++) {
                 for (int dx = -1; dx <= 1; dx++) {
                     int nx = x + dx;
@@ -55,13 +71,13 @@ Map<T> SlopeAnalyser<T>::computeSlopeCombined(void) {
                     // Kernel edge case check. Reflecting values for similar gradient.
                     if (nx < 0) nx = -nx;
                     if (ny < 0) ny = -ny;
-                    if (nx >= cols) nx = 2 * cols - nx - 2;
-                    if (ny >= rows) ny = 2 * rows - ny - 2;
+                    if (nx >= _width) nx = 2 * _width - nx - 2;
+                    if (ny >= _height) ny = 2 * _height - ny - 2;
 
-                    elevationValue = elevationMap.getData(nx, ny);
+                    T elevationValue = _elevationMap.getData(nx, ny);
 
-                    Gx += sobelX[dy + 1][dx + 1] * elevationValue;
-                    Gy += sobelY[dy + 1][dx + 1] * elevationValue;
+                    Gx += _sobelX[dy + 1][dx + 1] * elevationValue;
+                    Gy += _sobelY[dy + 1][dx + 1] * elevationValue;
                 }
             }
 
@@ -75,19 +91,19 @@ Map<T> SlopeAnalyser<T>::computeSlopeCombined(void) {
     return slopeMap;
 }
 
+/**
+ * @brief Create gradient map of x magnitude
+ */
 template <typename T>
 Map<T> SlopeAnalyser<T>::computeSlopeGx(void) {
-    int rows = elevationMap.getHeight();
-    int cols = elevationMap.getWidth();
-
-    T elevationValue;
-
-    Map<T> slopeMap(cols, rows);
+    // create gradient map
+    Map<T> slopeMap(_width, _height);
     
-    for (int y = 0; y < rows; y++) {
-        for (int x = 0; x < cols; x++) {
+    for (int y = 0; y < _height; y++) {
+        for (int x = 0; x < _width; x++) {
             int Gx = 0, Gy = 0;
 
+            // Iteratre for positions in sobel kernel
             for (int dy = -1; dy <= 1; dy++) {
                 for (int dx = -1; dx <= 1; dx++) {
                     int nx = x + dx;
@@ -96,11 +112,11 @@ Map<T> SlopeAnalyser<T>::computeSlopeGx(void) {
                     // Kernel edge case check. Reflecting values for similar gradient.
                     if (nx < 0) nx = -nx;
                     if (ny < 0) ny = -ny;
-                    if (nx >= cols) nx = 2 * cols - nx - 2;
-                    if (ny >= rows) ny = 2 * rows - ny - 2;
-                    elevationValue = elevationMap.getData(nx, ny);
+                    if (nx >= _width) nx = 2 * _width - nx - 2;
+                    if (ny >= _height) ny = 2 * _height - ny - 2;
+                    T elevationValue = _elevationMap.getData(nx, ny);
                     
-                    Gx += sobelX[dy + 1][dx + 1] * elevationValue;
+                    Gx += _sobelX[dy + 1][dx + 1] * elevationValue;
                 }
             }
 
@@ -114,19 +130,20 @@ Map<T> SlopeAnalyser<T>::computeSlopeGx(void) {
     return slopeMap;
 }
 
+/**
+* @brief Create gradient map of y magnitude
+ */
 template <typename T>
 Map<T> SlopeAnalyser<T>::computeSlopeGy(void) {
-    int rows = elevationMap.getHeight();
-    int cols = elevationMap.getWidth();
-
-    T elevationValue;
-
-    Map<T> slopeMap(cols, rows);
+    // Create gradient map
+    Map<T> slopeMap(_width, _height);
     
-    for (int y = 0; y < rows; y++) {
-        for (int x = 0; x < cols; x++) {
+    // Iterate over cell in _elevationMap
+    for (int y = 0; y < _height; y++) {
+        for (int x = 0; x < _width; x++) {
             int Gx = 0, Gy = 0;
 
+            // Iterate over position in sobel kernels
             for (int dy = -1; dy <= 1; dy++) {
                 for (int dx = -1; dx <= 1; dx++) {
                     int nx = x + dx;
@@ -135,11 +152,11 @@ Map<T> SlopeAnalyser<T>::computeSlopeGy(void) {
                     // Kernel edge case check. Reflecting values for similar gradient.
                     if (nx < 0) nx = -nx;
                     if (ny < 0) ny = -ny;
-                    if (nx >= cols) nx = 2 * cols - nx - 2;
-                    if (ny >= rows) ny = 2 * rows - ny - 2;
+                    if (nx >= _width) nx = 2 * _width - nx - 2;
+                    if (ny >= _height) ny = 2 * _height - ny - 2;
 
-                    elevationValue = elevationMap.getData(nx, ny);
-                    Gy += sobelY[dy + 1][dx + 1] * elevationValue;
+                    T elevationValue = _elevationMap.getData(nx, ny);
+                    Gy += _sobelY[dy + 1][dx + 1] * elevationValue;
                 }
             }
 
@@ -153,19 +170,20 @@ Map<T> SlopeAnalyser<T>::computeSlopeGy(void) {
     return slopeMap;
 }
 
-
+/**
+ * @brief Create aspect map
+ */
 template <typename T>
 Map<T> SlopeAnalyser<T>::computeDirection(void) {
-    int rows = elevationMap.getHeight();
-    int cols = elevationMap.getWidth();
     T elevationValue;
-    Map<T> dirMap(cols, rows);
+    Map<T> dirMap(_width, _height);
     
     // Threshold for small gradients (to avoid assigning 0 slope in flat areas)
     const T threshold = static_cast<T>(0.01); 
 
-    for (int y = 0; y < rows; y++) {
-        for (int x = 0; x < cols; x++) {
+    // Iterate over cells in _elevationMap
+    for (int y = 0; y < _height; y++) {
+        for (int x = 0; x < _width; x++) {
             int Gx = 0, Gy = 0;
 
             // Apply Sobel kernel for the 3x3 grid around the current cell
@@ -177,12 +195,12 @@ Map<T> SlopeAnalyser<T>::computeDirection(void) {
                     // Kernel edge case check. Reflecting values for similar gradient.
                     if (nx < 0) nx = -nx;
                     if (ny < 0) ny = -ny;
-                    if (nx >= cols) nx = 2 * cols - nx - 2;
-                    if (ny >= rows) ny = 2 * rows - ny - 2;
+                    if (nx >= _width) nx = 2 * _width - nx - 2;
+                    if (ny >= _height) ny = 2 * _height - ny - 2;
 
-                    elevationValue = elevationMap.getData(nx, ny);
-                    Gx += sobelX[dy + 1][dx + 1] * elevationValue;
-                    Gy += sobelY[dy + 1][dx + 1] * elevationValue;
+                    elevationValue = _elevationMap.getData(nx, ny);
+                    Gx += _sobelX[dy + 1][dx + 1] * elevationValue;
+                    Gy += _sobelY[dy + 1][dx + 1] * elevationValue;
                 }
             }
 
@@ -208,8 +226,6 @@ Map<T> SlopeAnalyser<T>::computeDirection(void) {
     }
     return dirMap;
 }
-
-
 
 // Instantiation
 template class SlopeAnalyser<int>;
