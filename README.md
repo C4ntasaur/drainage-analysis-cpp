@@ -57,16 +57,31 @@ This project is a C++ implementation of a drainage analysis tool used to calcula
 
 Instructions coming soon. Working on a combined CLI / REPL use.
 
+### CLI Mode
+
+    ```bash
+    ./drainage_analysis
+    ```
+
+Command Line Input of  drainage-analysis uses many flags
+
+#### Help / `-h`
+
 ### REPL / Interactive Mode
 
-Called by use of -int or --interactive flags from the CLI.
+REPL mode is activate by the `-int` or `--interactive` flags as so:
 
     ```bash
     ./drainage_analysis -int
     ```
-      ```bash
+
+    or
+
+    ```bash
     ./drainage_analysis --interactive
     ```
+
+These flags are incompatible with all other 
 
 ## License
 
