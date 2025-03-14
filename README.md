@@ -24,7 +24,7 @@ This project is a C++ implementation of a drainage analysis tool used to calcula
 
 1. Clone this repository:
 
-    ```bash
+    
     git clone https://github.com/C4ntasaur/drainage-analysis-cpp
 
 2. Navigate into the project directory:
