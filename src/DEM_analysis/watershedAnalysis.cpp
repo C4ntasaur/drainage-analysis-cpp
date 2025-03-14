@@ -275,8 +275,6 @@ Map<elevationT> watershedAnalysis<elevationT, D8T>::DinfWatershed(std::pair<int,
     // Helper recursive function
     std::function<void(int, int)> visitUpstream = [&](int x, int y) {
         elevationT currentFlow = _flowMap->getData(currentX, currentY); // Flow of the current cell
-        double MAX_ELEVATION = -1.7976931348623157e+308;  // Min double value for checking
-        bool validNeighbourFound = false;
 
         elevationT currentAspect = _aspectMap->getData(x, y);
         elevationT currentSlope = _slopeMap->getData(x, y);
@@ -296,8 +294,6 @@ Map<elevationT> watershedAnalysis<elevationT, D8T>::DinfWatershed(std::pair<int,
             }
             elevationT neighbourAspect = _aspectMap->getData(nx, ny);
             elevationT neighbourSlope = _slopeMap->getData(nx, ny);
-
-            
             
             // Check flow into current
             std::pair<std::array<int, 2>, std::array<int, 2>> directions = getNearestTwoDirections(neighbourAspect);
@@ -308,9 +304,13 @@ Map<elevationT> watershedAnalysis<elevationT, D8T>::DinfWatershed(std::pair<int,
             int expectedX2 = nx + dir2[0];
             int expectedY2 = ny + dir2[1];
             if ((expectedX1 == x && expectedY1 == y) || (expectedX2 == x && expectedY2 == y)) {
-                visited.setData(nx, ny, _flowMap->getData(nx, ny));
-                visitUpstream(nx, ny);
-                validNeighbourFound = true;
+                elevationT neighbourElevation = _elevationMap.getData(nx, ny);
+                elevationT currentElevation = _elevationMap.getData(x, y);
+                if (neighbourElevation >= currentElevation) {
+                    visited.setData(nx, ny, _flowMap->getData(nx, ny));
+                    visitUpstream(nx, ny);
+                }
+                
             }
         }
     };

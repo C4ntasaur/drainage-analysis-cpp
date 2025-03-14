@@ -127,8 +127,7 @@ void FlowAccumulator<elevationT, D8T, DinfT>::accumulateDinf(Map<elevationT>& _f
 
         // Find nearest two cells
         auto [dir1, dir2, weighting1, weighting2] = getNearestTwoDirections(theta);
-        std::cout << "Direction: " << theta << " returned: " << dir1[0] << ", " << dir1[1] << " and "
-        << dir2[0] << ", " << dir2[1] << std::endl;
+
         // Next 2 cell coordinates
         int nx1 = x + dir1[0];
         int ny1 = y + dir1[1];
@@ -136,8 +135,26 @@ void FlowAccumulator<elevationT, D8T, DinfT>::accumulateDinf(Map<elevationT>& _f
         int ny2 = y + dir2[1];
 
         // Out of bounds check
-        if (nx1 < 0 || ny1 < 0 || nx1 >= _width || ny1 >= _height) weighting1 = 0.0;
-        if (nx2 < 0 || ny2 < 0 || nx2 >= _width || ny2 >= _height) weighting2 = 0.0;
+        bool isCell1Valid = (nx1 >= 0 && ny1 >= 0 && nx1 < _width && ny1 < _height);
+        bool isCell2Valid = (nx2 >= 0 && ny2 >= 0 && nx2 < _width && ny2 < _height);
+
+        // Elevation check
+        if (isCell1Valid) {
+            elevationT neighbourElevation1 = _elevationMap.getData(nx1, ny1);
+            if (neighbourElevation1 >= elevation) {
+                isCell1Valid = false; // Cell 1 is not lower in elevation
+            }
+        }
+        if (isCell2Valid) {
+            elevationT neighbourElevation2 = _elevationMap.getData(nx2, ny2);
+            if (neighbourElevation2 >= elevation) {
+                isCell2Valid = false; // Cell 2 is not lower in elevation
+            }
+        }
+
+        // Adjust weights
+        if (!isCell1Valid) weighting1 = 0.0;
+        if (!isCell2Valid) weighting2 = 0.0;
 
         // Normalize weights to ensure total sum is 1
         double weightSum = weighting1 + weighting2;
@@ -150,10 +167,10 @@ void FlowAccumulator<elevationT, D8T, DinfT>::accumulateDinf(Map<elevationT>& _f
 
         // Accumulate flow
         double flowValue = tempFlowMap.getData(x, y);
-        if (weighting1 > 0.0) {
+        if (isCell1Valid && weighting1 > 0.0) {
             tempFlowMap.setData(nx1, ny1, tempFlowMap.getData(nx1, ny1) + (flowValue * weighting1));
         }
-        if (weighting2 > 0.0) {
+        if (isCell2Valid && weighting2 > 0.0) {
             tempFlowMap.setData(nx2, ny2, tempFlowMap.getData(nx2, ny2) + (flowValue * weighting2));
         }
     }
