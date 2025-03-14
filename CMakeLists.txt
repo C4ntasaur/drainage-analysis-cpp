@@ -10,7 +10,7 @@ set(SOURCES
     src/CLIhelperFunctions.cpp
     src/MapGeneral.cpp
     src/MapGeneral_IO.cpp
-    src/MapGeneral_Export.cpp
+    src/ImageExport.cpp
     src/modifyDEM.cpp
     src/MapVector.cpp
     src/SobelAnalysis.cpp
