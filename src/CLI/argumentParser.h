@@ -42,6 +42,8 @@ bool parseArguments(int argc, char* argv[],
                      bool& totalFlow,
                      bool& watershed,
                      int& nPourPoints,
+                     char*& watershed_directory,
+                     char*& watershed_colour,
                      bool& verbose, 
                      char*& process);
 
