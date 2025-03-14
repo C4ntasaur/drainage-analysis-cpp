@@ -2,7 +2,7 @@
  * @file ImageExport.h
  * @author Ollie
  * @brief Image exporter class to save Maps as .bmp
- * @version 1.0.0
+ * @version 1.1.0
  * @date 2025-03-13
  * 
  * @copyright Copyright (c) 2025
