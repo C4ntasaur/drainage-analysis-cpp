@@ -207,7 +207,7 @@ int main(int argc, char* argv[]) {
                 Map<double> outputWatershed = watershedAnalyser.calculateWatershed(p, "d8");
                 outputWatershed.applyScaling("log");
                 std::ostringstream oss;
-                oss << "../data/watershed_" << i << ".bmp";  // Format as "../data/watershed_i"
+                oss << "../test/watershed_" << i << ".bmp";  // Format as "../test/watershed_i"
                 std::string filename = oss.str();
                 ImageExport<double>::exportMapToImage(outputWatershed, filename, "g1", true);
                 i++;
@@ -233,7 +233,7 @@ int main(int argc, char* argv[]) {
                 Map<double> outputWatershed = watershedAnalyserDINF.calculateWatershed(p, "dinf");
                 outputWatershed.applyScaling("log");
                 std::ostringstream oss;
-                oss << "../data/watershed_" << i << ".bmp";  // Format as "../data/watershed_i"
+                oss << "../test/watershed_" << i << ".bmp";  // Format as "../test/watershed_i"
                 std::string filename = oss.str();
                 ImageExport<double>::exportMapToImage(outputWatershed, filename, "g1", true);
                 i++;
@@ -254,7 +254,7 @@ int main(int argc, char* argv[]) {
                 Map<double> outputWatershed = watershedAnalyser.calculateWatershed(p, "mdf");
                 outputWatershed.applyScaling("log");
                 std::ostringstream oss;
-                oss << "../data/watershed_" << i << ".bmp";  // Format as "../data/watershed_i"
+                oss << "../test/watershed_" << i << ".bmp";  // Format as "../test/watershed_i"
                 std::string filename = oss.str();
                 ImageExport<double>::exportMapToImage(outputWatershed, filename, "g1", true);
                 i++;
