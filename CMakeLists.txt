@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(SOURCES
     src/CLI/argumentParser.cpp
     src/CLI/CLIhelperFunctions.cpp
+    src/CLI/REPL.cpp
     src/CLI/MapProcessing.cpp
     src/CLI/CLIHandler.cpp
     src/map_core/MapGeneral.cpp

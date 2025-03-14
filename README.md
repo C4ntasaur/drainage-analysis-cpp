@@ -51,22 +51,42 @@ This project is a C++ implementation of a drainage analysis tool used to calcula
 
     ```bash
     make
-    ```
+    ````
 
 ## Usage
 
 Instructions coming soon. Working on a combined CLI / REPL use.
 
+### CLI Mode
+
+To use the program in Command-Line Interface (CLI) mode:
+    ```bash
+    ./drainage_analysis
+    ```
+The program accepts several flags:
+
+- **Help:**  Display help information.
+    ```bash
+    ./drainage_analysis -h
+    ```
+- **Verbose:** Run in verbose mode to get detailed output.
+    ```bash
+    ./drainage_analysis -v
+    ```
+
 ### REPL / Interactive Mode
 
-Called by use of -int or --interactive flags from the CLI.
+REPL mode is activate by the `-int` or `--interactive` flags as so:
 
-    ```bash
+    
     ./drainage_analysis -int
-    ```
-      ```bash
+
+or
+
+    
     ./drainage_analysis --interactive
-    ```
+
+Note: These flags are incompatible with all other flags.
 
 ## License
 

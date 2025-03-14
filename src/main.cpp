@@ -8,12 +8,25 @@
 #include "DEM_analysis/FlowAccumulation.h"
 #include "DEM_analysis/watershedAnalysis.h"
 #include "image_handling/ImageExport.h"
+#include "CLI/REPL.h"
 
 #include <iostream>
 #include <sstream>
 #include <cstring>
 
 int main(int argc, char* argv[]) {
+
+    if ((argc == 2) && (strcmp(argv[1], "-int") == 0 || strcmp(argv[1], "--interactive") == 0)) {
+        // Run REPL if -int or --interactive flag is provided
+        runREPL();
+    }
+    else if ((argc > 2) && (strcmp(argv[1], "-int") == 0 || strcmp(argv[1], "--interactive") == 0)) {
+        // Error if additional flags are provided with -int or --interactive
+        std::cerr << "Error: No other flags should be provided with -int or --interactive.\n";
+        return 1;
+    }
+    else {
+    // Manually allocate memory for strings and flags
     char* input_file = nullptr;
     char* input_file_type = nullptr;
     char* output_file = nullptr;
@@ -50,6 +63,7 @@ int main(int argc, char* argv[]) {
 
     printVerboseOutput(input_file, process, output_file, image_file, colour_type, verbose, watershed, nPourPoints, watershed_directory, watershed_colour, totalFlow);
 
+
     Map<double> elevationMap;
     if (!elevationMap.loadFromFile(input_file, input_file_type)) {
         std::cerr << "File: " << input_file << " does not exist." << std::endl;
@@ -81,6 +95,6 @@ int main(int argc, char* argv[]) {
     delete[] image_file;
     delete[] colour_type;
     delete[] process;
-
     return 0;
+    }
 }
