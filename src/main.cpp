@@ -209,7 +209,7 @@ int main(int argc, char* argv[]) {
                 std::ostringstream oss;
                 oss << "../data/watershed_" << i << ".bmp";  // Format as "../data/watershed_i"
                 std::string filename = oss.str();
-                ImageExport<double>::exportMapToImage(outputWatershed, filename, "g1");
+                ImageExport<double>::exportMapToImage(outputWatershed, filename, "g1", true);
                 i++;
             }
         }
@@ -235,7 +235,7 @@ int main(int argc, char* argv[]) {
                 std::ostringstream oss;
                 oss << "../data/watershed_" << i << ".bmp";  // Format as "../data/watershed_i"
                 std::string filename = oss.str();
-                ImageExport<double>::exportMapToImage(outputWatershed, filename, "g1");
+                ImageExport<double>::exportMapToImage(outputWatershed, filename, "g1", true);
                 i++;
             }
         }
@@ -256,7 +256,7 @@ int main(int argc, char* argv[]) {
                 std::ostringstream oss;
                 oss << "../data/watershed_" << i << ".bmp";  // Format as "../data/watershed_i"
                 std::string filename = oss.str();
-                ImageExport<double>::exportMapToImage(outputWatershed, filename, "g1");
+                ImageExport<double>::exportMapToImage(outputWatershed, filename, "g1", true);
                 i++;
             }
         }
@@ -270,7 +270,7 @@ if (totalFlow) {
     }
     if (image_file) {
         flowMap.applyScaling("log");
-        ImageExport<double>::exportMapToImage(flowMap, image_file, colour_type);
+        ImageExport<double>::exportMapToImage(flowMap, image_file, colour_type, true);
         std::cout << "Saved image file to: " << image_file << std::endl;
     }
 }
@@ -281,7 +281,7 @@ else {
             std::cout << "Saved D8 flow map as ." << input_file_type << " file: " << output_file << std::endl;
         }
         if (image_file) {
-            ImageExport<int>::exportMapToImage(D8Map, image_file, colour_type);
+            ImageExport<int>::exportMapToImage(D8Map, image_file, colour_type, true);
             std::cout << "Saved D8 flow map image to: " << image_file << std::endl;
         }
     }
@@ -291,7 +291,7 @@ else {
             std::cout << "Saved D∞ aspect map as ." << input_file_type << " file: " << output_file << std::endl;
         }
         if (image_file) {
-            ImageExport<double>::exportMapToImage(aspectMap, image_file, colour_type);
+            ImageExport<double>::exportMapToImage(aspectMap, image_file, colour_type, true);
             std::cout << "Saved D∞ aspect map image to: " << image_file << std::endl;
         }
     }
@@ -300,13 +300,13 @@ else {
     }
     else if (strcmp(process, "slope") == 0) {
         if (image_file) {
-            ImageExport<double>::exportMapToImage(GMap, image_file, colour_type);
+            ImageExport<double>::exportMapToImage(GMap, image_file, colour_type, true);
             std::cout << "Saved slope map image to: " << image_file << std::endl;
         }
     }
     else if (strcmp(process, "aspect") == 0) {
         if (image_file) {
-            ImageExport<double>::exportMapToImage(aspectMap, image_file, colour_type);
+            ImageExport<double>::exportMapToImage(aspectMap, image_file, colour_type, true);
             std::cout << "Saved aspect map image to: " << image_file << std::endl;
         }
     }
