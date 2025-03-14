@@ -267,8 +267,14 @@ void handleWatershedAnalysis(Map<double>* elevationMap, Map<int>*& D8Map, Map<do
     }
 
     std::string outputDir;
-    std::cout << "Enter directory to store pour point images: ";
+    std::cout << "Enter directory to store watershed images: ";
     std::cin >> outputDir;
+
+    std::cout << "Using directory: " << outputDir << std::endl;
+    
+    std::string colourmap;
+    std::cout << "Enter colourmap for watershed images: ";
+    std::cin >> colourmap;
 
     std::cout << "Using directory: " << outputDir << std::endl;
 
@@ -295,7 +301,7 @@ void handleWatershedAnalysis(Map<double>* elevationMap, Map<int>*& D8Map, Map<do
             oss << outputDir << "/watershed_" << i << ".bmp";
             std::string filename = oss.str();
 
-            ImageExport<double>::exportMapToImage(outputWatershed, filename, "g1", true);
+            ImageExport<double>::exportMapToImage(outputWatershed, filename, colourmap, true);
             i++;
         }
         std::cout << "Exported watershed images to: " << outputDir << std::endl;
@@ -330,7 +336,7 @@ void handleWatershedAnalysis(Map<double>* elevationMap, Map<int>*& D8Map, Map<do
             oss << outputDir << "/watershed_" << i << ".bmp";
             std::string filename = oss.str();
 
-            ImageExport<double>::exportMapToImage(outputWatershed, filename, "g1", true);
+            ImageExport<double>::exportMapToImage(outputWatershed, filename, colourmap, true);
             i++;
         }
         std::cout << "Exported watershed images to: " << outputDir << std::endl;
@@ -357,7 +363,7 @@ void handleWatershedAnalysis(Map<double>* elevationMap, Map<int>*& D8Map, Map<do
             oss << outputDir << "/watershed_" << i << ".bmp";
             std::string filename = oss.str();
 
-            ImageExport<double>::exportMapToImage(outputWatershed, filename, "g1", true);
+            ImageExport<double>::exportMapToImage(outputWatershed, filename, colourmap, true);
             i++;
         }
         std::cout << "Exported watershed images to: " << outputDir << std::endl;
