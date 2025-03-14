@@ -41,6 +41,8 @@ bool parseArguments(int argc, char* argv[],
                      bool& totalFlow,
                      bool& watershed,
                      int& nPourPoints,
+                     char*& watershed_directory,
+                     char*& watershed_colour,
                      bool& verbose, 
                      char*& process) {
     // Check minimum number of arguments
@@ -126,7 +128,10 @@ bool parseArguments(int argc, char* argv[],
         // Check if watershed was selected
         else if (strcmp(argv[i], "-w") == 0 || strcmp(argv[i], "--watershed") == 0) {
             watershed = true;
-            if (i + 1 < argc) {
+        
+            // Ensure there are at least three arguments after -w
+            if (i + 2 < argc) {
+                // First, check if the next argument is an integer (Pour Points)
                 if (isValidInteger(argv[i + 1])) {
                     nPourPoints = std::atoi(argv[i + 1]);
                     i++; // Skip to next argument
@@ -139,12 +144,34 @@ bool parseArguments(int argc, char* argv[],
                     std::cerr << "Error: -w flag requires a positive integer number of Pour Points." << std::endl;
                     return false;
                 }
+        
+                // The next argument should be the directory path (required)
+                watershed_directory = new char[strlen(argv[i + 1]) + 1];  // Store directory or filepath as string
+                strcpy(watershed_directory, argv[i + 1]);
+                i++; // Skip to next argument
+                std::cout << "Storing watershed images in directory: " << watershed_directory << std::endl;
+        
+                // Now, check if there's a color argument
+                if (i + 1 < argc) {
+                    // Check if a color argument is provided, and handle it
+                    watershed_colour = new char[strlen(argv[i + 1]) + 1];  // Allocate space for color type
+                    strcpy(watershed_colour, argv[i + 1]);
+                    i++; // Skip to next argument
+                    std::cout << "Using watershed color: " << watershed_colour << std::endl;
+                }
+                else {
+                    // If no color argument provided, default to "g1"
+                    watershed_colour = new char[3];  // Allocate space for default color
+                    strcpy(watershed_colour, "g1");  // Set default color type to "g1"
+                    std::cout << "No watershed color provided. Using default color: " << watershed_colour << std::endl;
+                }
             }
             else {
-                std::cerr << "Error: -w flag requires a positive integer number of Pour Points." << std::endl;
+                std::cerr << "Error: -w flag requires 3 arguments: <Pour Points> <Directory> <Color (optional)>" << std::endl;
                 return false;
             }
         }
+        
         // Check output
         else if (strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--output") == 0) {
             if (i + 1 < argc) {
@@ -172,7 +199,8 @@ bool parseArguments(int argc, char* argv[],
                     return false;
                 }
                 i++;  // Skip the next argument (image filename)
-            } else {
+            }
+            else {
                 std::cerr << "Error: -img flag requires an image filename." << std::endl;
                 return false;
             }
@@ -183,10 +211,8 @@ bool parseArguments(int argc, char* argv[],
                 strcpy(colour_type, argv[i + 1]);
                 colour = true;
                 i++;  // Skip next argument (colour or flag)
-            } else {
-                std::cout << "No colour specified. Defaulting to greyscale (g1)." << std::endl;
-                colour_type = new char[3];
-                strcpy(colour_type, "g1");
+            }
+            else {
             }
         }
         else if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--verbose") == 0) {

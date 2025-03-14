@@ -23,10 +23,12 @@ int main(int argc, char* argv[]) {
     bool totalFlow = false;
     bool watershed = false;
     int nPourPoints = 0;
+    char* watershed_directory;
+    char* watershed_colour;
     bool verbose = false;
     char* process = nullptr;
 
-    if (!parseArguments(argc, argv, input_file, input_file_type, output_file, image_file, colour, colour_type, totalFlow, watershed, nPourPoints, verbose, process)) {
+    if (!parseArguments(argc, argv, input_file, input_file_type, output_file, image_file, colour, colour_type, totalFlow, watershed, nPourPoints, watershed_directory, watershed_colour, verbose, process)) {
         delete[] input_file;
         delete[] input_file_type;
         delete[] output_file;
@@ -46,7 +48,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    printVerboseOutput(input_file, process, output_file, image_file, colour_type, verbose);
+    printVerboseOutput(input_file, process, output_file, image_file, colour_type, verbose, watershed, nPourPoints, watershed_directory, watershed_colour, totalFlow);
 
     Map<double> elevationMap;
     if (!elevationMap.loadFromFile(input_file, input_file_type)) {
@@ -70,7 +72,7 @@ int main(int argc, char* argv[]) {
 
     processMap(elevationMap, process, D8Map, flowMap, GMap, aspectMap, flowType);
     handleFlowAccumulation(elevationMap, D8Map, flowMap, GMap, aspectMap, flowType, totalFlow);
-    handleWatershed(elevationMap, D8Map, flowMap, GMap, aspectMap, flowType, watershed, nPourPoints);
+    handleWatershed(elevationMap, D8Map, flowMap, GMap, aspectMap, flowType, watershed, nPourPoints, watershed_directory, watershed_colour);
     handleOutput(flowMap, D8Map, aspectMap, GMap, output_file, image_file, input_file_type, colour_type, process, totalFlow);
 
     delete[] input_file;

@@ -52,7 +52,7 @@ void handleFlowAccumulation(Map<double>& elevationMap, Map<int>& D8Map, Map<doub
     }
 }
 
-void handleWatershed(Map<double>& elevationMap, Map<int>& D8Map, Map<double>& flowMap, Map<double>& GMap, Map<double>& aspectMap, std::string& flowType, bool watershed, int nPourPoints) {
+void handleWatershed(Map<double>& elevationMap, Map<int>& D8Map, Map<double>& flowMap, Map<double>& GMap, Map<double>& aspectMap, std::string& flowType, bool watershed, int nPourPoints, char* watershed_directory, char* watershed_colour) {
     if (watershed) {
         if (flowType == "d8") {
             FlowAccumulator<double, int, double> flowAccumulator(elevationMap, nullptr, nullptr, &D8Map);
@@ -66,9 +66,9 @@ void handleWatershed(Map<double>& elevationMap, Map<int>& D8Map, Map<double>& fl
                 Map<double> outputWatershed = watershedAnalyser.calculateWatershed(p, "d8");
                 outputWatershed.applyScaling("log");
                 std::ostringstream oss;
-                oss << "../test/watershed_" << i << ".bmp";  // Format as "../test/watershed_i"
+                oss << watershed_directory << "_" << i << ".bmp";  // Format as "../test/watershed_i"
                 std::string filename = oss.str();
-                ImageExport<double>::exportMapToImage(outputWatershed, filename, "g1", true);
+                ImageExport<double>::exportMapToImage(outputWatershed, filename, watershed_colour, true);
                 i++;
             }
         }
