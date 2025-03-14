@@ -60,19 +60,19 @@ Instructions coming soon. Working on a combined CLI / REPL use.
 ### CLI Mode
 
 To use the program in Command-Line Interface (CLI) mode:
-
+    ```bash
     ./drainage_analysis
-
+    ```
 The program accepts several flags:
 
 - **Help:**  Display help information.
-
+    ```bash
     ./drainage_analysis -h
-
+    ```
 - **Verbose:** Run in verbose mode to get detailed output.
-
+    ```bash
     ./drainage_analysis -v
-
+    ```
 
 ### REPL / Interactive Mode
 
