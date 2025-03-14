@@ -13,7 +13,7 @@
 #ifndef D8FLOWANALYSER_H
 #define D8FLOWANALYSER_H
 
-#include "Map.h"
+#include "../map_core/Map.h"
 
 /**
  * @brief Class definition for D8FlowAnalyser.

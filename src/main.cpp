@@ -8,14 +8,14 @@
  * @copyright Copyright (c) 2025
  * 
  */
-#include "argumentParser.h"
-#include "Map.h"
-#include "BMP.h"
-#include "SobelAnalysis.h"
-#include "D8FlowAnalyser.h"
-#include "FlowAccumulation.h" 
-#include "watershedAnalysis.h"
-#include "ImageExport.h"
+#include "CLI/argumentParser.h"
+#include "map_core/Map.h"
+#include "image_handling/BMP.h"
+#include "DEM_analysis/SobelAnalysis.h"
+#include "DEM_analysis/D8FlowAnalyser.h"
+#include "DEM_analysis/FlowAccumulation.h" 
+#include "DEM_analysis/watershedAnalysis.h"
+#include "image_handling/ImageExport.h"
 
 #include <iostream>
 #include <sstream>

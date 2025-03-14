@@ -127,7 +127,8 @@ void FlowAccumulator<elevationT, D8T, DinfT>::accumulateDinf(Map<elevationT>& _f
 
         // Find nearest two cells
         auto [dir1, dir2, weighting1, weighting2] = getNearestTwoDirections(theta);
-
+        std::cout << "Direction: " << theta << " returned: " << dir1[0] << ", " << dir1[1] << " and "
+        << dir2[0] << ", " << dir2[1] << std::endl;
         // Next 2 cell coordinates
         int nx1 = x + dir1[0];
         int ny1 = y + dir1[1];

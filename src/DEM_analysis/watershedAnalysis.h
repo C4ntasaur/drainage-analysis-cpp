@@ -11,7 +11,7 @@
 #ifndef WATERSHEDANALYSIS_H
 #define WATERSHEDANALYSIS_H
 
-#include "Map.h"
+#include "../map_core/Map.h"
 #include <vector>
 
 /**

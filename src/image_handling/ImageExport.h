@@ -11,7 +11,7 @@
 #ifndef IMAGE_EXPORT_H
 #define IMAGE_EXPORT_H
 
-#include "Map.h"
+#include "../map_core/Map.h"
 #include "BMP.h"
 #include "colourUtils.h"
 #include <string>

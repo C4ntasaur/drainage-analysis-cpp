@@ -6,17 +6,17 @@ set(CMAKE_CXX_STANDARD 17)
 
 # Source Files
 set(SOURCES
-    src/argumentParser.cpp
-    src/CLIhelperFunctions.cpp
-    src/MapGeneral.cpp
-    src/MapGeneral_IO.cpp
-    src/ImageExport.cpp
-    src/modifyDEM.cpp
-    src/MapVector.cpp
-    src/SobelAnalysis.cpp
-    src/D8FlowAnalyser.cpp
-    src/FlowAccumulation.cpp
-    src/watershedAnalysis.cpp
+    src/CLI/argumentParser.cpp
+    src/CLI/CLIhelperFunctions.cpp
+    src/map_core/MapGeneral.cpp
+    src/map_core/MapGeneral_IO.cpp
+    src/image_handling/ImageExport.cpp
+    src/map_core/modifyDEM.cpp
+    src/map_core/MapVector.cpp
+    src/DEM_analysis/SobelAnalysis.cpp
+    src/DEM_analysis/D8FlowAnalyser.cpp
+    src/DEM_analysis/FlowAccumulation.cpp
+    src/DEM_analysis/watershedAnalysis.cpp
     src/main.cpp
 )
 

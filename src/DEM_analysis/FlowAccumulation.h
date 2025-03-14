@@ -11,7 +11,7 @@
 #ifndef FLOWACCUMULATOR_H
 #define FLOWACCUMULATOR_H
 
-#include "Map.h"
+#include "../map_core/Map.h"
 #include "SobelAnalysis.h"
 #include <cmath>
 #include <vector>

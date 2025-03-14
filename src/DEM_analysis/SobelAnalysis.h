@@ -11,7 +11,7 @@
 #ifndef SLOPE_ANALYSIS_H
 #define SLOPE_ANALYSIS_H
 
-#include "Map.h"
+#include "../map_core/Map.h"
 
 /**
  * @brief SlopeAnalyser class that allows determination of gradient and aspect maps from a given
