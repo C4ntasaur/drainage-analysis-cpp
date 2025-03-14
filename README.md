@@ -24,7 +24,7 @@ This project is a C++ implementation of a drainage analysis tool used to calcula
 
 1. Clone this repository:
 
-    
+    ```bash
     git clone https://github.com/C4ntasaur/drainage-analysis-cpp
 
 2. Navigate into the project directory:
@@ -55,7 +55,7 @@ Instructions coming soon. Working on a combined CLI / REPL use.
 
 ### CLI Mode
 
-    ```
+    
     ./drainage_analysis
 
 Command Line Input of  drainage-analysis uses many flags
@@ -66,12 +66,12 @@ Command Line Input of  drainage-analysis uses many flags
 
 REPL mode is activate by the `-int` or `--interactive` flags as so:
 
-    ```bash
+    
     ./drainage_analysis -int
 
     or
 
-    ```bash
+    
     ./drainage_analysis --interactive
 
 These flags are incompatible with all other 
