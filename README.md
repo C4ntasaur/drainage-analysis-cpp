@@ -59,7 +59,7 @@ Instructions coming soon. Working on a combined CLI / REPL use.
 
 ### CLI Mode
 
-    ```bash
+    ```
     ./drainage_analysis
     ```
 
@@ -71,13 +71,13 @@ Command Line Input of  drainage-analysis uses many flags
 
 REPL mode is activate by the `-int` or `--interactive` flags as so:
 
-    ```bash
+    ```
     ./drainage_analysis -int
     ```
 
     or
 
-    ```bash
+    ```
     ./drainage_analysis --interactive
     ```
 
