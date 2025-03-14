@@ -20,8 +20,8 @@ inline RGBTRIPLE getColourFromColourmapContinuous(double value, const std::vecto
     if (index >= numColors - 1) index = numColors - 2;  // Cap index
 
     double localT = (value - index * segmentWidth) / segmentWidth;
-
-    return interpolateColor(colormap[index], colormap[index + 1], localT);
+    RGBTRIPLE result = interpolateColor(colormap[index], colormap[index + 1], localT);
+    return result;
 }
 
 inline RGBTRIPLE getColourFromColourmapDiscrete(double value, const std::vector<RGBTRIPLE>& colormap) {
