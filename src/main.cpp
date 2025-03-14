@@ -16,6 +16,7 @@
 #include "DEM_analysis/FlowAccumulation.h" 
 #include "DEM_analysis/watershedAnalysis.h"
 #include "image_handling/ImageExport.h"
+#include "CLI/REPL.h"
 
 #include <iostream>
 #include <sstream>
@@ -23,6 +24,16 @@
 
 
 int main(int argc, char* argv[]) {
+    if ((argc == 2) && (strcmp(argv[1], "-int") == 0 || strcmp(argv[1], "--interactive") == 0)) {
+        // Run REPL if -int or --interactive flag is provided
+        runREPL();
+    }
+    else if ((argc > 2) && (strcmp(argv[1], "-int") == 0 || strcmp(argv[1], "--interactive") == 0)) {
+        // Error if additional flags are provided with -int or --interactive
+        std::cerr << "Error: No other flags should be provided with -int or --interactive.\n";
+        return 1;
+    }
+    else {
     // Manually allocate memory for strings and flags
     char* input_file = nullptr;
     char* input_file_type = nullptr;
@@ -94,6 +105,11 @@ int main(int argc, char* argv[]) {
             delete[] colour_type;
             delete[] process;
             return 1;
+    }
+    if (image_file && watershed) {
+        std::cerr << "Watershed and image output are incompatible processes." << std::endl;
+        std::cerr << "Watershed has its own image output." << std::endl;
+        image_file = nullptr;
     }
 
     // Verbose output
@@ -320,4 +336,5 @@ delete[] image_file;
 delete[] colour_type;
 delete[] process;
 return 0;
+}
 }
