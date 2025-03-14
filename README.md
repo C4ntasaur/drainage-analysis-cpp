@@ -26,20 +26,17 @@ This project is a C++ implementation of a drainage analysis tool used to calcula
 
     ```bash
     git clone https://github.com/C4ntasaur/drainage-analysis-cpp
-    ```
 
 2. Navigate into the project directory:
 
     ```bash
     cd drainage-analysis-cpp
-    ```
 
 3. Create a build directory and navigate into it:
 
     ```bash
     mkdir build
     cd build
-    ```
 
 4. Run CMake to generate the build system:
 
@@ -51,7 +48,6 @@ This project is a C++ implementation of a drainage analysis tool used to calcula
 
     ```bash
     make
-    ```
 
 ## Usage
 
@@ -61,7 +57,6 @@ Instructions coming soon. Working on a combined CLI / REPL use.
 
     ```
     ./drainage_analysis
-    ```
 
 Command Line Input of  drainage-analysis uses many flags
 
@@ -71,15 +66,13 @@ Command Line Input of  drainage-analysis uses many flags
 
 REPL mode is activate by the `-int` or `--interactive` flags as so:
 
-    ```
+    ```bash
     ./drainage_analysis -int
-    ```
 
     or
 
-    ```
+    ```bash
     ./drainage_analysis --interactive
-    ```
 
 These flags are incompatible with all other 
 
