@@ -2,7 +2,7 @@
  * @file FlowAccumulation.h
  * @author Ollie
  * @brief Flow accumulation class for multiple flow algorithms
- * @version 1.0.0
+ * @version 1.0.1
  * @date 2025-03-12
  * 
  * @copyright Copyright (c) 2025

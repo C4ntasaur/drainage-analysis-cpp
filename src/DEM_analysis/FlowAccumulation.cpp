@@ -1,3 +1,13 @@
+/**
+ * @file FlowAccumulation.cpp
+ * @author Ollie
+ * @brief Flow accumulation class for multiple flow algorithms
+ * @version 1.0.1
+ * @date 2025-03-14
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #include "FlowAccumulation.h"
 #include <iostream>
 #include <set>
