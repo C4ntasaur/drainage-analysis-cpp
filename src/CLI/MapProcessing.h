@@ -15,6 +15,6 @@ void handleFlowAccumulation(Map<double>& elevationMap, Map<int>& D8Map, Map<doub
 
 void handleWatershed(Map<double>& elevationMap, Map<int>& D8Map, Map<double>& flowMap, Map<double>& GMap, Map<double>& aspectMap, std::string& flowType, bool watershed, int nPourPoints, char* watershed_directory, char* watershed_colour);
 
-void handleOutput(Map<double>& flowMap, Map<int>& D8Map, Map<double>& aspectMap, Map<double>& GMap, char* output_file, char* image_file, char* input_file_type, char* colour_type, char* process, bool totalFlow);
+void handleOutput(Map<double>& flowMap, Map<int>& D8Map, Map<double>& aspectMap, Map<double>& GMap, char* output_file, char* image_file, char* input_file_type, char* colour_type, char* process, bool totalFlow, bool watershed);
 
 #endif // MAP_PROCESSING_H

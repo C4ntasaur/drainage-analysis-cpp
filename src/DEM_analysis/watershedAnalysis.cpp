@@ -36,6 +36,9 @@ std::vector<std::pair<int, int>> watershedAnalysis<elevationT, D8T>::getPourPoin
     if (method == "d8") {
         return D8PourPoints(nPoints);
     }
+    else if (method == "dinf") {
+        return DinfPourPoints(nPoints);
+    }
     else if (method == "mdf") {
         return MDFPourPoints(nPoints);
     }
@@ -119,6 +122,74 @@ std::vector<std::pair<int, int>> watershedAnalysis<elevationT, D8T>::D8PourPoint
                 }
             }
 
+            if (isPourPoint) {
+                double flowValue = _flowMap->getData(x, y);
+                // Push current point into queue
+                minHeap.push({x, y, flowValue});
+
+                // Keep only nPoints with the largest flow values
+                if (minHeap.size() > nPoints) {
+                    minHeap.pop();  // Remove the smallest flow value
+                }
+            }
+        }
+    }
+    // Extract top nPoints from the heap (in terms of flow value)
+    while (!minHeap.empty()) {
+        PointWithFlow p = minHeap.top();
+        Points.push_back({p.x, p.y});
+        minHeap.pop();
+    }
+    return Points;
+}
+
+/**
+ * @brief Dinf pour points algorithm
+ */
+template<typename elevationT, typename D8T>
+std::vector<std::pair<int, int>> watershedAnalysis<elevationT, D8T>::DinfPourPoints(int nPoints) {
+    // D8 directions from index (0-7)
+    int dx[] = {1, 1, 0, -1, -1, -1, 0, 1};
+    int dy[] = {0, 1, 1, 1, 0, -1, -1, -1};
+    std::vector<std::pair<int, int>> Points;
+
+    // Create priority queue (min-heap based on flow value) of ascending flow accumulation
+    std::priority_queue<PointWithFlow, std::vector<PointWithFlow>, std::greater<PointWithFlow>> minHeap;
+
+    // iterate cells in Maps
+    for (int y = 0; y < _height; y++) {
+        for (int x = 0; x < _width; x++) {
+            bool isPourPoint = true;
+            double currentElevation = _elevationMap.getData(x, y);
+            for (int i = 0; i < 8; i++) {
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+
+                // Out of bounds check
+                if (nx < 0 || ny < 0 || nx >= _width || ny >= _height) {
+                    continue;
+                }
+
+                double neighbourElevation = _elevationMap.getData(nx, ny);
+                double neighbourAspect = _aspectMap->getData(nx, ny);
+
+                // Elevation check
+                bool higherElevation = (neighbourElevation >= currentElevation);
+                bool contributesFlow = false;
+
+                std::pair<std::array<int, 2>, std::array<int, 2>> neighbourDirections = getNearestTwoDirections(neighbourAspect);
+                std::array<int, 2> dir1 = neighbourDirections.first;
+                std::array<int, 2> dir2 = neighbourDirections.second;
+
+                if ((nx + dir1[0] == x && ny + dir1[1] == y) ||
+                (nx + dir2[0] == x && ny + dir2[1] == y)) {
+                    contributesFlow = true;
+                }
+                if (higherElevation && contributesFlow) {
+                    isPourPoint = true;
+                    break;  // Can break as is guaranteed pour point
+                }
+            }
             if (isPourPoint) {
                 double flowValue = _flowMap->getData(x, y);
                 // Push current point into queue

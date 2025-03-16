@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
     processMap(elevationMap, process, D8Map, flowMap, GMap, aspectMap, flowType);
     handleFlowAccumulation(elevationMap, D8Map, flowMap, GMap, aspectMap, flowType, totalFlow);
     handleWatershed(elevationMap, D8Map, flowMap, GMap, aspectMap, flowType, watershed, nPourPoints, watershed_directory, watershed_colour);
-    handleOutput(flowMap, D8Map, aspectMap, GMap, output_file, image_file, input_file_type, colour_type, process, totalFlow);
+    handleOutput(flowMap, D8Map, aspectMap, GMap, output_file, image_file, input_file_type, colour_type, process, totalFlow, watershed);
 
     delete[] input_file;
     delete[] input_file_type;

@@ -41,9 +41,13 @@ bool validateArguments(char* input_file, char* input_file_type, char* output_fil
         }
     }
 
-    // Total flow w/ process check
+    // Total flow/watershed w/ process check
     if (totalFlow && !((strcmp(process, "mdf") == 0 || strcmp(process, "d8") == 0 || strcmp(process, "dinf") == 0 ))) {
             std::cerr << "Process " << process << " is not compatible with flow accumulation (-fa)." << std::endl;
+            return false;
+        }
+        if (watershed && !((strcmp(process, "mdf") == 0 || strcmp(process, "d8") == 0 || strcmp(process, "dinf") == 0 ))) {
+            std::cerr << "Process " << process << " is not compatible with watershed (-w)." << std::endl;
             return false;
         }
     

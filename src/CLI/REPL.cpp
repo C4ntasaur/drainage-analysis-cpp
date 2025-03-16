@@ -307,11 +307,6 @@ void handleWatershedAnalysis(Map<double>* elevationMap, Map<int>*& D8Map, Map<do
         std::cout << "Exported watershed images to: " << outputDir << std::endl;
     }
     else if (strcmp(type, "dinf") == 0) {
-        D8FlowAnalyser analyser(*elevationMap);
-        analyser.analyseFlow();
-        if (D8Map) delete D8Map;
-        D8Map = new Map<int>(analyser.getMap());
-
         SlopeAnalyser sAnalyser(*elevationMap);
         if (gradientMap) delete gradientMap;
         gradientMap = new Map<double>(sAnalyser.computeSlope("combined"));
@@ -324,9 +319,9 @@ void handleWatershedAnalysis(Map<double>* elevationMap, Map<int>*& D8Map, Map<do
         flowMap = new Map<double>(flowAccumulator.accumulateFlow("dinf"));
 
         std::vector<std::pair<int, int>> pourPoints;
-        watershedAnalysis<double, int> watershedAnalyser(*elevationMap, D8Map, flowMap, nullptr, nullptr);
-        pourPoints = watershedAnalyser.getPourPoints(nPourPoints, "d8");
-
+        watershedAnalysis<double, int> watershedAnalyser(*elevationMap, nullptr, flowMap, gradientMap, aspectMap);
+        pourPoints = watershedAnalyser.getPourPoints(nPourPoints, "dinf");
+    
         int i = 0;
         for (const auto& p : pourPoints) {
             Map<double> outputWatershed = watershedAnalyser.calculateWatershed(p, "dinf");

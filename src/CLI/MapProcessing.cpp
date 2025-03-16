@@ -62,45 +62,36 @@ void handleWatershed(Map<double>& elevationMap, Map<int>& D8Map, Map<double>& fl
             pourPoints = watershedAnalyser.getPourPoints(nPourPoints, "d8");
             int i = 0;
             for (const auto& p : pourPoints) {
-                std::cout << D8Map.getData(p.first, p.second) << std::endl;
                 Map<double> outputWatershed = watershedAnalyser.calculateWatershed(p, "d8");
                 outputWatershed.applyScaling("log");
                 std::ostringstream oss;
-                oss << watershed_directory << "_" << i << ".bmp";  // Format as "../test/watershed_i"
+                oss << watershed_directory << "watershed_" << i << ".bmp";  // Format as "../test/watershed_i"
                 std::string filename = oss.str();
                 ImageExport<double>::exportMapToImage(outputWatershed, filename, watershed_colour, true);
                 i++;
             }
         }
         else if (flowType == "dinf") {
-            D8FlowAnalyser analyser(elevationMap);
-            analyser.analyseFlow();
-            D8Map = analyser.getMap();
-
             FlowAccumulator<double, int, double> flowAccumulator(elevationMap, &aspectMap, &GMap, nullptr);
             flowMap = flowAccumulator.accumulateFlow(flowType);
 
             std::vector<std::pair<int, int>> pourPoints;
-            watershedAnalysis<double, int> watershedAnalyser(elevationMap, &D8Map, &flowMap, nullptr, nullptr);
-            pourPoints = watershedAnalyser.getPourPoints(nPourPoints, "d8");
-
-            watershedAnalysis<double, int> watershedAnalyserDINF(elevationMap, nullptr, &flowMap, &GMap, &aspectMap);
-
+            watershedAnalysis<double, int> watershedAnalyser(elevationMap, nullptr, &flowMap, &GMap, &aspectMap);
+            pourPoints = watershedAnalyser.getPourPoints(nPourPoints, "dinf");
             int i = 0;
             for (const auto& p : pourPoints) {
-                Map<double> outputWatershed = watershedAnalyserDINF.calculateWatershed(p, "dinf");
+                Map<double> outputWatershed = watershedAnalyser.calculateWatershed(p, "dinf");
+                std::cout << "watershed calculated" << std::endl;
                 outputWatershed.applyScaling("log");
                 std::ostringstream oss;
-                oss << "../test/watershed_" << i << ".bmp";  // Format as "../test/watershed_i"
+                oss << watershed_directory << "watershed_" << i << ".bmp";  // Format as "../test/watershed_i"
                 std::string filename = oss.str();
-                ImageExport<double>::exportMapToImage(outputWatershed, filename, "g1", true);
+                ImageExport<double>::exportMapToImage(outputWatershed, filename, watershed_colour, true);
                 i++;
             }
+
         }
         else if (flowType == "mdf") {
-            D8FlowAnalyser analyser(elevationMap);
-            analyser.analyseFlow();
-            D8Map = analyser.getMap();
             FlowAccumulator<double, int, double> flowAccumulator(elevationMap, nullptr, &GMap, nullptr);
             flowMap = flowAccumulator.accumulateFlow(flowType);
             std::vector<std::pair<int, int>> pourPoints;
@@ -112,16 +103,16 @@ void handleWatershed(Map<double>& elevationMap, Map<int>& D8Map, Map<double>& fl
                 Map<double> outputWatershed = watershedAnalyser.calculateWatershed(p, "mdf");
                 outputWatershed.applyScaling("log");
                 std::ostringstream oss;
-                oss << "../test/watershed_" << i << ".bmp";  // Format as "../test/watershed_i"
+                oss << watershed_directory << "watershed_" << i << ".bmp";  // Format as "../test/watershed_i"
                 std::string filename = oss.str();
-                ImageExport<double>::exportMapToImage(outputWatershed, filename, "g1", true);
+                ImageExport<double>::exportMapToImage(outputWatershed, filename, watershed_colour, true);
                 i++;
             }
         }
     }
 }
 
-void handleOutput(Map<double>& flowMap, Map<int>& D8Map, Map<double>& aspectMap, Map<double>& GMap, char* output_file, char* image_file, char* input_file_type, char* colour_type, char* process, bool totalFlow) {
+void handleOutput(Map<double>& flowMap, Map<int>& D8Map, Map<double>& aspectMap, Map<double>& GMap, char* output_file, char* image_file, char* input_file_type, char* colour_type, char* process, bool totalFlow, bool watershed) {
     if (totalFlow) {
         if (output_file) {
             flowMap.saveToFile(output_file, input_file_type);
@@ -154,7 +145,7 @@ void handleOutput(Map<double>& flowMap, Map<int>& D8Map, Map<double>& aspectMap,
                 std::cout << "Saved D∞ aspect map image to: " << image_file << std::endl;
             }
         }
-        else if (strcmp(process, "mdf") == 0) {
+        else if (strcmp(process, "mdf") == 0 && !(watershed)) {
             std::cerr << "MDF process does not have output without Flow Accumulation (-fa). " << std::endl;
         }
         else if (strcmp(process, "slope") == 0) {
