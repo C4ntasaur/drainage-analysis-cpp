@@ -2,7 +2,7 @@
  * @file watershedAnalysis.cpp
  * @author your name (you@domain.com)
  * @brief Watershed delineation class for Map objects: flow maps, gradients maps, and aspect
- * @version 1.0.0
+ * @version 1.1.0
  * @date 2025-03-13
  * 
  * @copyright Copyright (c) 2025
@@ -146,6 +146,9 @@ std::vector<std::pair<int, int>> watershedAnalysis<elevationT, D8T>::D8PourPoint
 /**
  * @brief Dinf pour points algorithm
  */
+/**
+ * @brief Dinf pour points algorithm
+ */
 template<typename elevationT, typename D8T>
 std::vector<std::pair<int, int>> watershedAnalysis<elevationT, D8T>::DinfPourPoints(int nPoints) {
     // D8 directions from index (0-7)
@@ -156,11 +159,15 @@ std::vector<std::pair<int, int>> watershedAnalysis<elevationT, D8T>::DinfPourPoi
     // Create priority queue (min-heap based on flow value) of ascending flow accumulation
     std::priority_queue<PointWithFlow, std::vector<PointWithFlow>, std::greater<PointWithFlow>> minHeap;
 
-    // iterate cells in Maps
+    // Iterate through all cells
     for (int y = 0; y < _height; y++) {
         for (int x = 0; x < _width; x++) {
-            bool isPourPoint = true;
+            // vars for condition checking
+            bool allHigherElevation = true;
+            bool hasFlowingNeighbor = false;
             double currentElevation = _elevationMap.getData(x, y);
+
+            // Check all 8 neighbors
             for (int i = 0; i < 8; i++) {
                 int nx = x + dx[i];
                 int ny = y + dy[i];
@@ -174,23 +181,25 @@ std::vector<std::pair<int, int>> watershedAnalysis<elevationT, D8T>::DinfPourPoi
                 double neighbourAspect = _aspectMap->getData(nx, ny);
 
                 // Elevation check
-                bool higherElevation = (neighbourElevation >= currentElevation);
-                bool contributesFlow = false;
+                if (neighbourElevation < currentElevation) {
+                    allHigherElevation = false;
+                }
 
+                // Get directions that the neighbor cell's aspect points to
                 std::pair<std::array<int, 2>, std::array<int, 2>> neighbourDirections = getNearestTwoDirections(neighbourAspect);
                 std::array<int, 2> dir1 = neighbourDirections.first;
                 std::array<int, 2> dir2 = neighbourDirections.second;
 
+                // Check if this neighbor flows into the current cell
                 if ((nx + dir1[0] == x && ny + dir1[1] == y) ||
-                (nx + dir2[0] == x && ny + dir2[1] == y)) {
-                    contributesFlow = true;
-                }
-                if (higherElevation && contributesFlow) {
-                    isPourPoint = true;
-                    break;  // Can break as is guaranteed pour point
+                    (nx + dir2[0] == x && ny + dir2[1] == y)) {
+                    hasFlowingNeighbor = true;
                 }
             }
-            if (isPourPoint) {
+
+            /* at least one neighbour that flows into current cell and all
+             neighbours are taller */
+            if (allHigherElevation && hasFlowingNeighbor) {
                 double flowValue = _flowMap->getData(x, y);
                 // Push current point into queue
                 minHeap.push({x, y, flowValue});
@@ -202,74 +211,88 @@ std::vector<std::pair<int, int>> watershedAnalysis<elevationT, D8T>::DinfPourPoi
             }
         }
     }
+
     // Extract top nPoints from the heap (in terms of flow value)
     while (!minHeap.empty()) {
         PointWithFlow p = minHeap.top();
         Points.push_back({p.x, p.y});
         minHeap.pop();
     }
+
     return Points;
 }
+
 
 /**
  * @brief MDF method for identifying pour points
  */
+/**
+ * @brief Multi-Directional Flow (MDF) pour points algorithm
+ */
 template<typename elevationT, typename D8T>
 std::vector<std::pair<int, int>> watershedAnalysis<elevationT, D8T>::MDFPourPoints(int nPoints) {
-    // All direction about central cell
+    // D8 directions (N, NE, E, SE, S, SW, W, NW)
     int dx[] = {1, 1, 0, -1, -1, -1, 0, 1};
     int dy[] = {0, 1, 1, 1, 0, -1, -1, -1};
     std::vector<std::pair<int, int>> Points;
 
-    // Create priority queue (min-heap based on flow value) of ascending flow accumulation
+    // Min-heap based on flow value (ascending order)
     std::priority_queue<PointWithFlow, std::vector<PointWithFlow>, std::greater<PointWithFlow>> minHeap;
 
-    // Iterate over every cell in Map
+    // Iterate over every cell in the map
     for (int y = 0; y < _height; y++) {
         for (int x = 0; x < _width; x++) {
-            bool isPourPoint = false;
             elevationT currentElevation = _elevationMap.getData(x, y);
-            // Check if there is any neighbor with greater elevation
+            bool allHigher = true;
             bool hasTallerNeighbor = false;
+
+            // Check all 8 neighbors
             for (int dir = 0; dir < 8; dir++) {
                 int nx = x + dx[dir];
                 int ny = y + dy[dir];
 
                 // Out of bounds check
-                if (nx >= 0 && nx < _width && ny >= 0 && ny < _height) {
-                    elevationT neighborElevation = _elevationMap.getData(nx, ny);
-                    if (neighborElevation > currentElevation) {
-                        hasTallerNeighbor = true;
-                        break;  // We found at least one taller neighbor
-                    }
+                if (nx < 0 || ny < 0 || nx >= _width || ny >= _height) {
+                    continue;
+                }
+
+                elevationT neighborElevation = _elevationMap.getData(nx, ny);
+
+                // Elevation checks
+                if (neighborElevation < currentElevation) {
+                    allHigher = false;
+                    break; // No longer pour point, can skip
+                }
+
+                // One strictly taller neighbour
+                if (neighborElevation > currentElevation) {
+                    hasTallerNeighbor = true;
                 }
             }
 
-            if (hasTallerNeighbor) {
-                isPourPoint = true;  // Has a taller neighbor -> pour point candidate
-            }
-
-            // If the cell is a pour point based on the criteria, add to heap
-            if (isPourPoint) {
+            // Check elevation conditions
+            if (allHigher && hasTallerNeighbor) {
                 double flowValue = _flowMap->getData(x, y);
-                // Push current point into queue
                 minHeap.push({x, y, flowValue});
 
-                // Keep only nPoints with the largest flow values
+                // Keep only the top nPoints with the largest flow values
                 if (minHeap.size() > nPoints) {
                     minHeap.pop();  // Remove the smallest flow value
                 }
             }
         }
     }
+
     // Extract top nPoints from the heap (in terms of flow value)
     while (!minHeap.empty()) {
         PointWithFlow p = minHeap.top();
         Points.push_back({p.x, p.y});
         minHeap.pop();
     }
+
     return Points;
 }
+
 
 /**
  * @brief D8 watershed delineation method

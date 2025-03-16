@@ -2,7 +2,7 @@
  * @file watershedAnalysis.h
  * @author Ollie
  * @brief Watershed delineation class for Map objects: flow maps, gradients maps, and aspect
- * @version 1.0.0
+ * @version 1.1.0
  * @date 2025-03-13
  * 
  * @copyright Copyright (c) 2025
@@ -89,7 +89,7 @@ private:
 
     /**
      * @brief Identification of pour points via D infinity algorithm
-     * @bug THIS IS NOT IMPLEMENTED
+     * All neighbours with greater elevation and at least one neighbour that flows in
      * @param nPoints Number of points to find
      * @return std::vector<std::pair<int, int>> 
      */
