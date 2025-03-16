@@ -11,12 +11,16 @@
 #include "CLIHandler.h"
 #include <iostream>
 
+/**
+ * @brief Function to compare CLI inputs to see if there are conflicts
+ */
 bool validateArguments(char* input_file, char* input_file_type, char* output_file, char* image_file, bool colour, char*& colour_type, bool totalFlow, bool watershed, int nPourPoints, char* process) {
+    // No input file
     if (!input_file) {
         std::cerr << "Error: No -i / --input flag provided." << std::endl;
         return false;
     }
-    // No outputs
+    // No outputs is bad unless watershed
     if (!watershed && !output_file && !image_file) {
         std::cerr << "Error: At least one of -o (output file), -img (image file), or -w (watershed) must be specified." << std::endl;
         return false;
@@ -59,6 +63,9 @@ bool validateArguments(char* input_file, char* input_file_type, char* output_fil
     return true;
 }
 
+/**
+ * @brief Function to print verbose output
+ */
 void printVerboseOutput(char* input_file, char* process, char* output_file, char* image_file, char* colour_type, bool verbose, bool watershed, int nPourPoints, char* watershed_directory, char* watershed_colour, bool totalFlow) {
     if (verbose) {
         std::cout << "Verbose mode enabled." << std::endl;

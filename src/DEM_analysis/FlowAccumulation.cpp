@@ -2,7 +2,7 @@
  * @file FlowAccumulation.cpp
  * @author Ollie
  * @brief Flow accumulation class for multiple flow algorithms
- * @version 1.0.1
+ * @version 1.0.2
  * @date 2025-03-14
  * 
  * @copyright Copyright (c) 2025
@@ -33,6 +33,7 @@ FlowAccumulator<elevationT, D8T, DinfT>::FlowAccumulator(const Map<elevationT>& 
  */
 template <typename elevationT, typename D8T, typename DinfT>
 Map<elevationT> FlowAccumulator<elevationT, D8T, DinfT>::accumulateFlow(const std::string& method) {
+    // If else for flow method chosen
     if (method == "d8") {
         if (!_D8Map) {
             std::cerr << "Error: D8 map is null. Cannot perform D8 flow accumulation." << std::endl;
@@ -56,7 +57,8 @@ Map<elevationT> FlowAccumulator<elevationT, D8T, DinfT>::accumulateFlow(const st
     }
     else {
         std::cerr << "Unknown method: " << method << std::endl;
-        return _flowMap;
+        // Failure
+        return _flowMap; // Empty flow map
     }
     return _flowMap;
 }
