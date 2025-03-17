@@ -12,9 +12,8 @@ Created for Applied Programming module in ESE, Imperial College London.
     - [CLI Mode](#cli-mode)
     - [REPL Mode](#repl--interactive-mode)
 5. [Examples](#examples)
-6. [Contributing](#contributing)
-7. [Credits](#credits)
-8. [License](#license)
+6. [Credits](#credits)
+7. [License](#license)
 
 ## Overview
 
@@ -87,7 +86,6 @@ Run the program with flags to specify inputs, processes, and outputs.
 | `-c`  | Colourmaps for images     | [Colour Codes](#colour-codes)         | `-c dw`                          |
 | `-h`  | Show help                 |  None                                 | `-h`                             |
 | `-v`  | Enter verbose mode        | None                                  | `-v`                             |
-|-------|---------------------------|---------------------------------------|----------------------------------|
 
 #### Colourmaps
 
@@ -115,7 +113,6 @@ Start an interactive session:
 | `export`  | Export as BMP              | `export flow.bmp g1`                  |
 | `help`    | Show commands              | `help`                          |
 | `exit`    | Quit REPL                  | `quit`                          |
-|-----------|----------------------------|------------------------------------|
 
 #### Watershed Workflow
 ```bash
@@ -136,12 +133,55 @@ Watershed images saved to outputs/
     ./drainage-analysis -i data/DEMs/DTM50.txt -p mdf -fa -img flow.bmp -c g2
     ```
     Exports a greyscale BMP of flow accumulation.
+   ![Flow Accumulation](docs/images/flow_accumulation_mdf.png)
 2. **Watershed Delineation with D8:**
     ```bash
     ./drainage-analysis -i data/DEMs/DTM50.txt -p d8 -w 3 outputs/ sf
     ```
     Generates 3 watershed images in `outputs/` using the "seafloor" color map.
 
+#### REPL Examples
+1. **Flow Accumulation with MDF:**
+    ```bash
+    ./drainage-analysis --interactive
+    Welcome to the DEM Processor REPL. Type 'help' for a list of commands.
+    > load data/DEMs/DTM50.txt
+    File loaded successfully.
+    > process mdf_flow	
+    MDF Flow accumulation completed.
+    > export flow.bmp g2
+    Flow map exported to flow.bmp
+    > quit
+    Exiting...
+    Successful
+    ```
+    Exports a greyscale BMP of flow accumulation.
+2. **Watershed Delineation with D8:**
+    ```bash
+    ./drainage-analysis --interactive
+    Welcome to the DEM Processor REPL. Type 'help' for a list of commands.
+    > load data/DEMs/DTM50.txt
+    File loaded successfully.
+    > process watershed
+    Entering watershed mode
+    Enter name of process to be used: d8
+    Enter number of pour points: 3
+    Enter directory to store watershed images: ../test/
+    Using directory: ../outputs/
+    Enter colourmap for watershed images: sf
+    Using colourmap: sf
+    Exported watershed images to: ../test/
+    > quit
+    Exiting...
+    Successful
+    ```
+    Generates 3 watershed images in `outputs/` using the "seafloor" color map.
+   ![Flow Accumulation](docs/images/flow_accumulation_mdf.png)
+
+## Credits
+- Fabio Crameri for the sf (seafloor) and dw (drywet) color maps.
+    Learn more about scientific color maps [here](https://www.fabiocrameri.ch/colourmaps/).
+- Tarboton, 1997 for the D Infinity flow algorithm. <i>Tarboton, David G. "A new method for the determination of flow directions and upslope areas in grid digital elevation models." Water resources research 33.2 (1997): 309-319.</i>
 
 ## License
 
