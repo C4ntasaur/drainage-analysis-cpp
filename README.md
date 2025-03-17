@@ -1,17 +1,37 @@
 # DrainageAnalysisCPP
 
-Drainage analysis written in C++ for the Advanced Programming coursework section.
+A C++ implementation for drainage analysis, capable of processing Digital Elevation Models (DEMs) to compute terrain features, flow accumulation, and watershed delineation using multiple flow algorithms.
+Created for Applied Programming module in ESE, Imperial College London.
 
 ## Table of Contents
 
 1. [Overview](#overview)
-2. [Installation](#installation)
-3. [Usage](#usage)
-4. [License](#license)
+2. [Features](#features)
+3. [Installation](#installation)
+4. [Usage](#usage)
+    - [CLI Mode](#cli-mode)
+    - [REPL Mode](#repl--interactive-mode)
+5. [Examples](#examples)
+6. [Contributing](#contributing)
+7. [Credits](#credits)
+8. [License](#license)
 
 ## Overview
 
-This project is a C++ implementation of a drainage analysis tool used to calculate terrain features, flow accumulation, and watershed areas of Digital Elevation Models (DEMs) across many flow algorithms.
+**DrainageAnalysisCPP** is a tool for hydrological terrain analysis. It processes DEMs to compute slope, aspect, flow direction (using D8, D-Infinity, and Multi-Directional Flow algorithms), flow accumulation, and watershed delineation. Results can be exported as images, text files, or binary data.
+
+## Features
+
+- **Flow Direction Algorithms**
+        - Directional 8 (D8)
+        - D-Infinity (Dinf)
+        - Multi-Directional Flow (MDF)
+- **Terrain Analysis**
+
+- **Hydrological Tools**
+- **Input / Output Formats**
+- **Modes**
+
 
 ## Installation
 
@@ -89,11 +109,11 @@ The method accepts several flags.
     ```
 
     Accepted processes:
-    - Slope
-    - Aspect
-    - d8
-    - dinf
-    - mdf
+    - Slope, Sobel gradient of DEM.
+    - Aspect, Aspect map of DEM.
+    - d8, Directional 8 map of DEM.
+    - dinf, D/infinity map of DEM
+    - mdf, requires flow accumulation or watershed.
 
 - **Flow Accumulation:** Calculate flow accumulation based on Process.
 
@@ -127,6 +147,8 @@ The method accepts several flags.
     - .txt, space separated values
     - .csv, comma separated values
     - .bin, binary file with Map width and height given as an integer header
+
+    This is incompatible with a bare multidirectional flow process (-p mdf).
 
 - **Image Export:** Run in verbose mode to get detailed output.
 
