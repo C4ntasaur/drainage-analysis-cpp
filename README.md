@@ -81,12 +81,17 @@ Run the program with flags to specify inputs, processes, and outputs.
 | `-i`  | Input DEM file            | `<filename>`                          | `-i data/DEMs/example.txt`       |
 | `-p`  | Process to run            | `slope`, `aspect`, `d8`, `dinf`, `mdf`| `-p dinf`                        |
 | `-fa` | Compute flow accumulation | None                                  | `-fa`                            |
-| `-w`  | Watershed delineation     | `nPoints dir colour`                  | `-w 3 outputs/ sf`               |
+| `-w`  | Watershed delineation     | `number of points`, `output directory`,  `[Colour Codes](#colourmaps)`                  | `-w 3 outputs/ sf`               |
 | `-o`  | Save processed DEM        | `<filename>`                          | `-o output.csv`                  |
 | `-img`| Export as BMP image       | `<filename>`                          | `-img flow.bmp`                  |
-| `-c`  | Colourmaps for images     | [Colour Codes](#colour-codes)         | `-c dw`                          |
+| `-c`  | Colourmaps for images     | [Colour Codes](#colourmaps)         | `-c dw`                          |
 | `-h`  | Show help                 |  None                                 | `-h`                             |
 | `-v`  | Enter verbose mode        | None                                  | `-v`                             |
+
+Note:
+
+- **D8 (`d8`) and D-Infinity (`dinf`):** By default these processes return output flow maps, Directional 8 and Aspect Maps respectively. Including the `-fa` flag computes flow accumulation instead.
+- **Multi-Directional Flow:** Requires either `-fa` (flow accumulation) or `-w` (watershed delineation) to generate an output.
 
 #### Colourmaps
 
@@ -109,11 +114,20 @@ Start an interactive session:
 | Command   | Description                | Example
 |-----------|----------------------------|--------------------------------------|
 | `load`    | Load a DEM file            | `load ../data/DEMs/DTM50.txt `      |
-| `process` | Run a process              | `process aspect`                    |
+| `process` | Run a process. Check [Valid Processes](#valid-processes)              | `process aspect`                    |
 | `save`    | Save processed data        | `save output.txt`                   |
 | `export`  | Export as BMP              | `export flow.bmp g1`                  |
 | `help`    | Show commands              | `help`                          |
 | `exit`    | Quit REPL                  | `quit`                          |
+
+#### Valid Processes:
+- `slope`: Compute slope.
+- `aspect`: Compute aspect.
+- `d8`: Find the Directional 8 Map.
+- `d8_flow`: Compute flow accumulation based on the Directional 8 method.
+- `dinf_flow`: Compute flow accumulation based on the D-Infinity method.
+- `mdf_flow`: Compute flow accumulation based on the Multi-Directional Flow method.
+- `watershed`: Enter watershed delineation dialogue.
 
 #### Watershed Workflow
 ```bash
