@@ -173,6 +173,7 @@ Here we do not use typical output flags such as -o or -img and only use -w.
 ./drainage-analysis -i ../data/DEMs/DTM50.txt -p d8 -w 3 ../outdir/ sf
 ```
 
+
 ### REPL / Interactive Mode
 
 REPL mode is activate by the `-int` or `--interactive` flags as so:
