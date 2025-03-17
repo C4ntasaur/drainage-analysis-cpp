@@ -63,7 +63,9 @@ To use the program in Command-Line Interface (CLI) mode:
     ```bash
     ./drainage-analysis
     ```
-The program accepts several flags:
+The program accepts several flags.
+
+#### Flags
 
 - **Help:**  Display help information.
 
@@ -136,8 +138,6 @@ The program accepts several flags:
 
     Export processed DEM as a .bmp image.
     Can be used in conjunction with colourmaps with the -c flag.
-    
-    
 
 - **Colour:** Run in verbose mode to get detailed output.
 
@@ -155,6 +155,16 @@ The program accepts several flags:
     - 'dw', brown - purple colourmap.
 
     Credit to Fabio Crameri for 'sf' (seafloor) and 'dw' (drywet) colourmaps.
+
+#### Example Usage
+
+##### Standard Flow Accumulation using multi-directional flow algorithm
+
+    ```bash
+        ./drainage-analysis -i ../data/DEMs/DTM50.txt -p mdf -fa -img ../outdir/flow.bmp -c g2
+    ```
+
+    This example shows how to create a flow accumulation image usinf the multi-directional flow algorithm.
 
 
 ### REPL / Interactive Mode
