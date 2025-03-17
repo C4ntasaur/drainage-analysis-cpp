@@ -203,8 +203,9 @@ Watershed images saved to outputs/
     ./drainage-analysis -i data/DEMs/DTM50.txt -p mdf -fa -img flow.bmp -c g2
     ```
     Exports a greyscale BMP of flow accumulation.
-
-    ![Flow Accumulation](docs/images/flow_accumulation_mdf.bmp)
+    <div style="display: flex; justify-content: space-between; gap: 10px">
+        <img src="docs/images/flow_accumulation_mdf.bmp" alt="Watershed Image 1" style="width: 32%">
+    </div>
 
 3. **Watershed Delineation with D8:**
     ```bash
