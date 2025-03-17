@@ -23,4 +23,4 @@ set(SOURCES
     src/main.cpp
 )
 
-add_executable(terrain_analysis ${SOURCES})
+add_executable(drainage-analysis ${SOURCES})
