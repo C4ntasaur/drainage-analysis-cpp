@@ -55,8 +55,6 @@ This project is a C++ implementation of a drainage analysis tool used to calcula
 
 ## Usage
 
-Instructions coming soon. Working on a combined CLI / REPL use.
-
 ### CLI Mode
 
 To use the program in Command-Line Interface (CLI) mode:
@@ -160,12 +158,20 @@ The method accepts several flags.
 
 ##### Standard Flow Accumulation using multi-directional flow algorithm
 
+This example shows how to create a flow accumulation image usinf the multi-directional flow algorithm.
+
 ```bash
 ./drainage-analysis -i ../data/DEMs/DTM50.txt -p mdf -fa -img ../outdir/flow.bmp -c g2
 ```
 
-This example shows how to create a flow accumulation image usinf the multi-directional flow algorithm.
+##### Watershed delineation of 3 points using Directional-8 algorithm
 
+This example shows how to create a three watershed delineation images using the Directional-8 algorithm.
+Here we do not use typical output flags such as -o or -img and only use -w.
+
+```bash
+./drainage-analysis -i ../data/DEMs/DTM50.txt -p d8 -w 3 ../outdir/ sf
+```
 
 ### REPL / Interactive Mode
 
@@ -181,7 +187,76 @@ or
 ./drainage-analysis --interactive
 ```
 
-Note: These flags are incompatible with all other flags.
+Once ran you enter REPL mode:
+
+```bash
+Welcome to the DEM Processor REPL. Type 'help' for a list of commands.
+> 
+```
+
+#### REPL Commands
+
+There are several commands avaliable for REPL use.
+
+- **load:** Load a DEM for processing
+
+    ```bash
+    > load filename
+    ```
+
+    Load a DEM from a plain text (e.g. .tx, .csv) or binary file.
+    Accepted file types:
+    - .txt, space separated values
+    - .csv, comma separated values
+    - .bin, binary file with Map width and height given as an integer header
+
+- **process:** Run specific processes on the loaded DEM
+
+    ```bash
+    > process process_name
+    ```
+
+- **watershed:** Sub-menu within the process command
+    Accessed with `> process watershed` after loading a DEM.
+    Will ask a series of questions on watershed parameters:
+
+    ```bash
+    Entering watershed mode
+    Enter name of process to be used:
+    Enter number of pour points:
+    Enter directory to store watershed images:
+    Using directory:
+    Enter colourmap for watershed images:
+    Using colourmap:
+    Exported watershed images to:
+    ```
+
+- **save:** Save a processed DEM to a file.
+
+    ```bash
+    > save filename
+    ```
+
+    Save a processed map to a plain text (e.g. .tx, .csv) or binary file.
+    Accepted file types:
+    - .txt, space separated values
+    - .csv, comma separated values
+    - .bin, binary file with Map width and height given as an integer header
+
+- **export:** Export a processed DEM as an image
+
+    ```bash
+    > export filename.bmp colour
+    ```
+
+    Export a processed map to a .bmp image.
+    Colour parameter refers to the colour short codes found [here](data/colourmaps/).
+
+- **help:** Prints a help message for command usage
+
+    ```bash
+    > help
+    ```
 
 ## License
 
