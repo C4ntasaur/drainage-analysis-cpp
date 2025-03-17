@@ -133,7 +133,7 @@ Watershed images saved to outputs/
     ./drainage-analysis -i data/DEMs/DTM50.txt -p mdf -fa -img flow.bmp -c g2
     ```
     Exports a greyscale BMP of flow accumulation.
-   ![Flow Accumulation](docs/images/flow_accumulation_mdf.png)
+   ![Flow Accumulation](docs/images/flow_accumulation_mdf.bmp)
 2. **Watershed Delineation with D8:**
     ```bash
     ./drainage-analysis -i data/DEMs/DTM50.txt -p d8 -w 3 outputs/ sf
@@ -176,7 +176,11 @@ Watershed images saved to outputs/
     Successful
     ```
     Generates 3 watershed images in `outputs/` using the "seafloor" color map.
-   ![Flow Accumulation](docs/images/flow_accumulation_mdf.png)
+   <div style="display: flex; justify-content: space-between; gap: 10px">
+      <img src="docs/images/watershed_0.bmp" alt="Watershed Image 1" style="width: 32%">
+      <img src="docs/images/watershed_1.bmp" alt="Watershed Image 2" style="width: 32%">
+      <img src="docs/images/watershed_2.bmp" alt="Watershed Image 3" style="width: 32%">
+    </div>
 
 ## Credits
 - Fabio Crameri for the sf (seafloor) and dw (drywet) color maps.
