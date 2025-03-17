@@ -23,9 +23,9 @@ Created for Applied Programming module in ESE, Imperial College London.
 ## Features
 
 - **Flow Direction Algorithms**
-        - Directional 8 (D8)
-        - D-Infinity (Dinf)
-        - Multi-Directional Flow (MDF)
+    - Directional 8 (D8)
+    - D-Infinity (Dinf)
+    - Multi-Directional Flow (MDF)
 - **Terrain Analysis**
 
 - **Hydrological Tools**
