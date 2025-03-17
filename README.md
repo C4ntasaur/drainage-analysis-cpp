@@ -42,6 +42,7 @@ drainage-analysis-cpp
 │   │ 
 │   └───DEM_analysis
 │   │   └───Directional 8 map class and methods
+│   │   └───Gradient and slope map class and methods
 │   │   └───Flow accumulation class and methods
 │   │   └───Watershed delineation class and methods
 │   │
