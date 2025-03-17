@@ -111,14 +111,14 @@ Start an interactive session:
 
 #### Commands
 
-| Command   | Description                | Example
+| Command   | Description | Arguments                | Example
 |-----------|----------------------------|--------------------------------------|
-| `load`    | Load a DEM file            | `load ../data/DEMs/DTM50.txt `      |
-| `process` | Run a process. Check [Valid Processes](#valid-processes)              | `process aspect`                    |
-| `save`    | Save processed data        | `save output.txt`                   |
-| `export`  | Export as BMP              | `export flow.bmp g1`                  |
-| `help`    | Show commands              | `help`                          |
-| `exit`    | Quit REPL                  | `quit`                          |
+| `load`    | Load a DEM file   | `<filename>`          | `load ../data/DEMs/DTM50.txt `      |
+| `process` | Run a process. Check [Valid Processes](#valid-processes) | `[processes]`         | `process aspect`                    |
+| `save`    | Save processed data | `<filename>`       | `save output.txt`                   |
+| `export`  | Export as BMP            | `<filename>` | `export flow.bmp g1`                  |
+| `help`    | Show commands      | None        | `help`                          |
+| `exit`    | Quit REPL           | None      | `quit`                          |
 
 #### Valid Processes:
 - `slope`: Compute slope.
