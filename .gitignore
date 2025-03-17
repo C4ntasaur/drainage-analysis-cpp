@@ -9,6 +9,10 @@
 .DS_Store
 Thumbs.db
 
+README_SHORT.md
+README_SHORT.pdf
+README.pdf
+
 # Ignore dependency managers' directories
 /CMakeFiles/
 
