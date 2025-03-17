@@ -127,7 +127,7 @@ Run the program with flags to specify inputs, processes, and outputs.
 | Flag | Description                | Arguments                             | Example                          |
 |------|----------------------------|---------------------------------------|----------------------------------|
 | `-i`  | Input DEM file            | `<filename>`                          | `-i data/DEMs/example.txt`       |
-| `-p`  | Process to run            | `slope`, `aspect`, `d8`, `dinf`, `mdf`| `-p dinf`                        |
+| `-p`  | Process to run            | [Processes](#valid-cli-processes)| `-p dinf`                        |
 | `-fa` | Compute flow accumulation | None                                  | `-fa`                            |
 | `-w`  | Watershed delineation     | `<num_points> <output_dir> <colourmap>`,  `[Colour Codes](#colourmaps)`                  | `-w 3 outputs/ sf`               |
 | `-o`  | Save processed DEM        | `<filename>`                          | `-o output.csv`                  |
@@ -140,7 +140,8 @@ Note:
 
 - **D8 (`d8`) and D-Infinity (`dinf`):** By default these processes return output flow maps, Directional 8 and Aspect Maps respectively. Including the `-fa` flag computes flow accumulation instead.
 - **Multi-Directional Flow (`mdf`)** does not output a flow map by default. Use `-fa` or `-w` to generate results.
-#### Valid Processes:
+
+#### Valid CLI Processes:
 - `slope`: Compute slope.
 - `aspect`: Compute aspect.
 - `d8`: Find the Directional 8 Map. Allows for flow accumulation (`-fa`) and watershed (`-w`).
@@ -168,13 +169,13 @@ Start an interactive session:
 | Command   | Description | Arguments                | Example
 |-----------|----------------------------|------------|-------------------------|
 | `load`    | Load a DEM file   | `<filename>`          | `load ../data/DEMs/DTM50.txt `      |
-| `process` | Run a process. Check [Valid Processes](#valid-processes) | `[processes]`         | `process aspect`                    |
+| `process` | Run a process. Check [Valid Processes](#valid-repl-processes) | `[processes]`         | `process aspect`                    |
 | `save`    | Save processed data | `<filename>`       | `save output.txt`                   |
 | `export`  | Export as BMP            | `<filename>` | `export flow.bmp g1`                  |
 | `help`    | Show commands      | None        | `help`                          |
 | `exit`    | Quit REPL           | None      | `quit`                          |
 
-#### Valid Processes:
+#### Valid REPL Processes:
 - `slope`: Compute slope.
 - `aspect`: Compute aspect.
 - `d8`: Find the Directional 8 Map.
