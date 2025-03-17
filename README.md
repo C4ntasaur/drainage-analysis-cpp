@@ -8,17 +8,37 @@ Created for Applied Programming module in ESE, Imperial College London.
 
 1. [Overview](#overview)
 2. [Features](#features)
-3. [Installation](#installation)
-4. [Usage](#usage)
+3. [Project Structure](#project-structure)
+4. [Installation](#installation)
+5. [Usage](#usage)
     - [CLI Mode](#cli-mode)
     - [REPL Mode](#repl--interactive-mode)
-5. [Examples](#examples)
-6. [Credits](#credits)
-7. [License](#license)
+6. [Examples](#examples)
+7. [Credits](#credits)
+8. [License](#license)
 
 ## Overview
 
 **DrainageAnalysisCPP** is a tool for hydrological terrain analysis. It processes DEMs to compute slope, aspect, flow direction (using D8, D-Infinity, and Multi-Directional Flow algorithms), flow accumulation, and watershed delineation. Results can be exported as images, text files, or binary data.
+
+## Features
+
+- **Flow Direction Algorithms**
+    - Directional 8 (D8)
+    - D-Infinity (Dinf)
+    - Multi-Directional Flow (MDF)
+- **Terrain Analysis**
+    - Slope Calculation (Sobel Gradient)
+    - Aspect Calculation
+- **Hydrological Tools**
+    - Flow Accumulation
+    - Watershed Delineation
+- **Input / Output Formats**
+    - Text (.txt), CSV (.csv), and binary (.bin) DEMs
+    - BMP image exports with customizable colourmaps
+- **Modes**
+    - Command-Line Interface (CLI)
+    - Interactive REPL (Read-Eval-Print Loop)
 
 ## Project Structure
 DrainageAnalysisCPP is structured into **4 core components**:
@@ -66,25 +86,6 @@ drainage-analysis-cpp
     └───images
     │    └───*.bmp
 ```
-
-## Features
-
-- **Flow Direction Algorithms**
-    - Directional 8 (D8)
-    - D-Infinity (Dinf)
-    - Multi-Directional Flow (MDF)
-- **Terrain Analysis**
-    - Slope Calculation (Sobel Gradient)
-    - Aspect Calculation
-- **Hydrological Tools**
-    - Flow Accumulation
-    - Watershed Delineation
-- **Input / Output Formats**
-    - Text (.txt), CSV (.csv), and binary (.bin) DEMs
-    - BMP image exports with customizable colourmaps
-- **Modes**
-    - Command-Line Interface (CLI)
-    - Interactive REPL (Read-Eval-Print Loop)
 
 ## Installation
 
