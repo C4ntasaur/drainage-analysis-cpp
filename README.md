@@ -27,18 +27,24 @@ Created for Applied Programming module in ESE, Imperial College London.
     - D-Infinity (Dinf)
     - Multi-Directional Flow (MDF)
 - **Terrain Analysis**
-
+    - Slope Calculation (Sobel Gradient)
+    - Aspect Calculation
 - **Hydrological Tools**
+    - Flow Accumulation
+    - Watershed Delineation
 - **Input / Output Formats**
+    - Text (.txt), CSV (.csv), and binary (.bin) DEMs
+    - BMP image exports with customizable colourmaps
 - **Modes**
-
+    - Command-Line Interface (CLI)
+    - Interactive REPL (Read-Eval-Print Loop)
 
 ## Installation
 
 ### Prerequisites
 
 - [CMake](https://cmake.org/install/) (version 3.31.6 or higher)
-- A C++ compiler (e.g., GCC, Clang, or MSVC)
+- A C++ compiler (GCC, Clang, or MSVC)
 
 ### Steps to Install
 
@@ -46,41 +52,46 @@ Created for Applied Programming module in ESE, Imperial College London.
 
     ```bash
     git clone https://github.com/C4ntasaur/drainage-analysis-cpp
-    ```
-
-2. Navigate into the project directory:
-
-    ```bash
     cd drainage-analysis-cpp
     ```
 
-3. Create a build directory and navigate into it:
+2. Build the project:
 
     ```bash
-    mkdir build
-    cd build
+    mkdir build && cd build
+    cmake .. && make
     ```
 
-4. Run CMake to generate the build system:
-
-    ```bash
-    cmake ..
-    ```
-
-5. Build the project:
-
-    ```bash
-    make
-    ````
+Exectuable `drainage-analysis` will be in the `build` directory.
 
 ## Usage
 
 ### CLI Mode
 
+Run the program with flags to specify inputs, processes, and outputs.
+**General Syntax:**
+```bash
+./drainage-analysis [FLAGS] [ARGUMENTS]
+```
+
+#### Flags & Arguments
+
+| Flag | Description                | Arguments                  | Example                          |
+|------|----------------------------|----------------------------|----------------------------------|
+| `-i` | Input DEM file             | `filename`                 | `-i data/DEMs/example.txt`       |
+| `-p` | Process algorithm          | `d8`/`dinf`/`mdf`          | `-p dinf`                        |
+| `-w` | Watershed delineation      | `nPoints dir colour`       | `-w 3 outputs/ sf`               |
+
+
+
+
+
+
+
+
+
 To use the program in Command-Line Interface (CLI) mode:
-    ```bash
-    ./drainage-analysis
-    ```
+
 The method accepts several flags.
 
 #### Flags
