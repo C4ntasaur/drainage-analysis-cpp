@@ -12,9 +12,8 @@ Created for Applied Programming module in ESE, Imperial College London.
     - [CLI Mode](#cli-mode)
     - [REPL Mode](#repl--interactive-mode)
 5. [Examples](#examples)
-6. [Contributing](#contributing)
-7. [Credits](#credits)
-8. [License](#license)
+6. [Credits](#credits)
+7. [License](#license)
 
 ## Overview
 
@@ -76,228 +75,113 @@ Run the program with flags to specify inputs, processes, and outputs.
 
 #### Flags & Arguments
 
-| Flag | Description                | Arguments                  | Example                          |
-|------|----------------------------|----------------------------|----------------------------------|
-| `-i`  | Input DEM file            | `<filename>`               | `-i data/DEMs/example.txt`       |
-| `-p`  | Process to run            | `slope`, `aspect`, `d8`, `dinf`, `mdf`          | `-p dinf`                        |
-| `-fa` | Compute flow accumulation | `nPoints dir colour`       | `-w 3 outputs/ sf`               |
-| `-w`  | Watershed delineation     | `nPoints dir colour`       | `-w 3 outputs/ sf`               |
-| `-o`  | Save processed DEM        | `nPoints dir colour`       | `-w 3 outputs/ sf`               |
-| `-img`| Export as BMP image       | `nPoints dir colour`       | `-w 3 outputs/ sf`               |
-| `-c`  | Colourmaps for images     | `nPoints dir colour`       | `-w 3 outputs/ sf`               |
-| `-h`  | Show help                 |           `nPoints dir colour`       | `-w 3 outputs/ sf`               |
-| `-v`  | Enter verbose mode        | `nPoints dir colour`       | `-w 3 outputs/ sf`               |
-|-------|---------------------------|----------------------------|----------------------------------|
+| Flag | Description                | Arguments                             | Example                          |
+|------|----------------------------|---------------------------------------|----------------------------------|
+| `-i`  | Input DEM file            | `<filename>`                          | `-i data/DEMs/example.txt`       |
+| `-p`  | Process to run            | `slope`, `aspect`, `d8`, `dinf`, `mdf`| `-p dinf`                        |
+| `-fa` | Compute flow accumulation | None                                  | `-fa`                            |
+| `-w`  | Watershed delineation     | `nPoints dir colour`                  | `-w 3 outputs/ sf`               |
+| `-o`  | Save processed DEM        | `<filename>`                          | `-o output.csv`                  |
+| `-img`| Export as BMP image       | `<filename>`                          | `-img flow.bmp`                  |
+| `-c`  | Colourmaps for images     | [Colour Codes](#colour-codes)         | `-c dw`                          |
+| `-h`  | Show help                 |  None                                 | `-h`                             |
+| `-v`  | Enter verbose mode        | None                                  | `-v`                             |
 
+#### Colourmaps
 
-
-
-
-
-
-
-
-To use the program in Command-Line Interface (CLI) mode:
-
-The method accepts several flags.
-
-#### Flags
-
-- **Help:**  Display help information.
-
-    ```bash
-    ./drainage-analysis -h
-    ```
-
-- **Input:** Input a DEM file
-
-    ```bash
-    ./drainage-analysis -i filename
-    ```
-
-    Accepted file types:
-    - .txt, space separated values
-    - .csv, comma separated values
-    - .bin, binary file with DEM width and height given as an integer header
-
-- **Process:** Run a process on the DEM file
-
-    ```bash
-    ./drainage-analysis -p process
-    ```
-
-    Accepted processes:
-    - Slope, Sobel gradient of DEM.
-    - Aspect, Aspect map of DEM.
-    - d8, Directional 8 map of DEM.
-    - dinf, D/infinity map of DEM
-    - mdf, requires flow accumulation or watershed.
-
-- **Flow Accumulation:** Calculate flow accumulation based on Process.
-
-    ```bash
-    ./drainage-analysis -fa
-    ```
-
-    Only works with flow direction algorithms: d8, dinf, and mdf.
-    Outputs images of log scaling or saved files of regular flow accumulation.
-    Is incompatible with watershed delineation.
-
-- **Watershed Delineation:** Calculate Watershed Delineation areas from a Process.
-
-    ```bash
-    ./drainage-analysis -w nPoints directory colour
-    ```
-
-    Only works with flow direction algorithms: d8, dinf, and mdf.
-    Output is a series of images (number of points) of watersheds saved to specified directory with chosen colourmap.
-    Images have log scaling applied.
-    Is incompatible with other output methods (-o, -img).
-
-- **File Saving:** Save the processed DEM.
-
-    ```bash
-    ./drainage-analysis -o filename
-    ```
-
-    Export processed DEM as a plain text (e.g. .txt, .csv) or binary file.
-    Accepted file types:
-    - .txt, space separated values
-    - .csv, comma separated values
-    - .bin, binary file with Map width and height given as an integer header
-
-    This is incompatible with a bare multidirectional flow process (-p mdf).
-
-- **Image Export:** Run in verbose mode to get detailed output.
-
-    ```bash
-    ./drainage_analysis -img filename
-    ```
-
-    Export processed DEM as a .bmp image.
-    Can be used in conjunction with colourmaps with the -c flag.
-
-- **Colour:** Run in verbose mode to get detailed output.
-
-    ```bash
-    ./drainage-analysis -c colourCode
-    ```
-
-    Select colour for image export (-img).
-    If not specified, 'g1' (greyscale) is used.
-    Colourmap short codes are found [here](data/colourmaps/).
-
-    Example colourmaps:
-    - 'g1', greyscale where white is the greatest value
-    - 'sf', bluescale where dark blue is the greatest value
-    - 'dw', brown - purple colourmap.
-
-    Credit to Fabio Crameri for 'sf' (seafloor) and 'dw' (drywet) colourmaps.
-
-#### Example Usage
-
-##### Standard Flow Accumulation using multi-directional flow algorithm
-
-This example shows how to create a flow accumulation image usinf the multi-directional flow algorithm.
-
-```bash
-./drainage-analysis -i ../data/DEMs/DTM50.txt -p mdf -fa -img ../outdir/flow.bmp -c g2
-```
-
-##### Watershed delineation of 3 points using Directional-8 algorithm
-
-This example shows how to create a three watershed delineation images using the Directional-8 algorithm.
-Here we do not use typical output flags such as -o or -img and only use -w.
-
-```bash
-./drainage-analysis -i ../data/DEMs/DTM50.txt -p d8 -w 3 ../outdir/ sf
-```
-
+Predefined colourmaps (stored in `data/colourmaps/`):
+- `g1`: Greyscale (white = high)
+- `g2`: Greyscale (black = high)
+- `sf`: Bluescale ('seafloor')
+- `dw`: Brown - purple ('drywet')
 
 ### REPL / Interactive Mode
 
-REPL mode is activate by the `-int` or `--interactive` flags as so:
-
-```bash
-./drainage-analysis -int
-```
-
-or
+Start an interactive session:
 
 ```bash
 ./drainage-analysis --interactive
 ```
 
-Once ran you enter REPL mode:
+#### Commands
 
+| Command   | Description                | Example
+|-----------|----------------------------|--------------------------------------|
+| `load`    | Load a DEM file            | `load ../data/DEMs/DTM50.txt `      |
+| `process` | Run a process              | `process aspect`                    |
+| `save`    | Save processed data        | `save output.txt`                   |
+| `export`  | Export as BMP              | `export flow.bmp g1`                  |
+| `help`    | Show commands              | `help`                          |
+| `exit`    | Quit REPL                  | `quit`                          |
+
+#### Watershed Workflow
 ```bash
-Welcome to the DEM Processor REPL. Type 'help' for a list of commands.
-> 
+> load data/DEMs/DTM50.txt
+> process watershed
+Enter process (d8/dinf/mdf): d8
+Number of pour points: 3
+Output directory: outputs/
+Color map: sf
+Watershed images saved to outputs/
 ```
 
-#### REPL Commands
+### Examples
 
-There are several commands avaliable for REPL use.
-
-- **load:** Load a DEM for processing
-
+#### CLI Examples
+1. **Flow Accumulation with MDF:**
     ```bash
-    > load filename
+    ./drainage-analysis -i data/DEMs/DTM50.txt -p mdf -fa -img flow.bmp -c g2
     ```
-
-    Load a DEM from a plain text (e.g. .tx, .csv) or binary file.
-    Accepted file types:
-    - .txt, space separated values
-    - .csv, comma separated values
-    - .bin, binary file with Map width and height given as an integer header
-
-- **process:** Run specific processes on the loaded DEM
-
+    Exports a greyscale BMP of flow accumulation.
+   ![Flow Accumulation](docs/images/flow_accumulation_mdf.png)
+2. **Watershed Delineation with D8:**
     ```bash
-    > process process_name
+    ./drainage-analysis -i data/DEMs/DTM50.txt -p d8 -w 3 outputs/ sf
     ```
+    Generates 3 watershed images in `outputs/` using the "seafloor" color map.
 
-- **watershed:** Sub-menu within the process command
-    Accessed with `> process watershed` after loading a DEM.
-    Will ask a series of questions on watershed parameters:
-
+#### REPL Examples
+1. **Flow Accumulation with MDF:**
     ```bash
+    ./drainage-analysis --interactive
+    Welcome to the DEM Processor REPL. Type 'help' for a list of commands.
+    > load data/DEMs/DTM50.txt
+    File loaded successfully.
+    > process mdf_flow	
+    MDF Flow accumulation completed.
+    > export flow.bmp g2
+    Flow map exported to flow.bmp
+    > quit
+    Exiting...
+    Successful
+    ```
+    Exports a greyscale BMP of flow accumulation.
+2. **Watershed Delineation with D8:**
+    ```bash
+    ./drainage-analysis --interactive
+    Welcome to the DEM Processor REPL. Type 'help' for a list of commands.
+    > load data/DEMs/DTM50.txt
+    File loaded successfully.
+    > process watershed
     Entering watershed mode
-    Enter name of process to be used:
-    Enter number of pour points:
-    Enter directory to store watershed images:
-    Using directory:
-    Enter colourmap for watershed images:
-    Using colourmap:
-    Exported watershed images to:
+    Enter name of process to be used: d8
+    Enter number of pour points: 3
+    Enter directory to store watershed images: ../test/
+    Using directory: ../outputs/
+    Enter colourmap for watershed images: sf
+    Using colourmap: sf
+    Exported watershed images to: ../test/
+    > quit
+    Exiting...
+    Successful
     ```
+    Generates 3 watershed images in `outputs/` using the "seafloor" color map.
+   ![Flow Accumulation](docs/images/flow_accumulation_mdf.png)
 
-- **save:** Save a processed DEM to a file.
-
-    ```bash
-    > save filename
-    ```
-
-    Save a processed map to a plain text (e.g. .tx, .csv) or binary file.
-    Accepted file types:
-    - .txt, space separated values
-    - .csv, comma separated values
-    - .bin, binary file with Map width and height given as an integer header
-
-- **export:** Export a processed DEM as an image
-
-    ```bash
-    > export filename.bmp colour
-    ```
-
-    Export a processed map to a .bmp image.
-    Colour parameter refers to the colour short codes found [here](data/colourmaps/).
-
-- **help:** Prints a help message for command usage
-
-    ```bash
-    > help
-    ```
+## Credits
+- Fabio Crameri for the sf (seafloor) and dw (drywet) color maps.
+    Learn more about scientific color maps [here](https://www.fabiocrameri.ch/colourmaps/).
+- Tarboton, 1997 for the D Infinity flow algorithm. <i>Tarboton, David G. "A new method for the determination of flow directions and upslope areas in grid digital elevation models." Water resources research 33.2 (1997): 309-319.</i>
 
 ## License
 
