@@ -93,6 +93,13 @@ Note:
 - **D8 (`d8`) and D-Infinity (`dinf`):** By default these processes return output flow maps, Directional 8 and Aspect Maps respectively. Including the `-fa` flag computes flow accumulation instead.
 - **Multi-Directional Flow:** Requires either `-fa` (flow accumulation) or `-w` (watershed delineation) to generate an output.
 
+#### Valid Processes:
+- `slope`: Compute slope.
+- `aspect`: Compute aspect.
+- `d8`: Find the Directional 8 Map. Allows for flow accumulation (`-fa`) and watershed (`-w`).
+- `dinf`: Finds the aspect map. Allows for flow accumulation (`-fa`) and watershed (`-w`).
+- `mdf`: Allows for flow accumulation (`-fa`) and watershed (`-w`).
+
 #### Colourmaps
 
 Predefined colourmaps (stored in `data/colourmaps/`):
@@ -112,7 +119,7 @@ Start an interactive session:
 #### Commands
 
 | Command   | Description | Arguments                | Example
-|-----------|----------------------------|--------------------------------------|
+|-----------|----------------------------|------------|-------------------------|
 | `load`    | Load a DEM file   | `<filename>`          | `load ../data/DEMs/DTM50.txt `      |
 | `process` | Run a process. Check [Valid Processes](#valid-processes) | `[processes]`         | `process aspect`                    |
 | `save`    | Save processed data | `<filename>`       | `save output.txt`                   |
