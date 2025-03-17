@@ -20,6 +20,52 @@ Created for Applied Programming module in ESE, Imperial College London.
 
 **DrainageAnalysisCPP** is a tool for hydrological terrain analysis. It processes DEMs to compute slope, aspect, flow direction (using D8, D-Infinity, and Multi-Directional Flow algorithms), flow accumulation, and watershed delineation. Results can be exported as images, text files, or binary data.
 
+## Project Structure
+DrainageAnalysisCPP is structured into **4 core components**:
+- **CLI & REPL Interface** – Handles user interaction.
+- **DEM Analysis** – Manipulates Digital Elevation Models (DEMs) for slope, aspect, flow, and watershed analysis.
+- **Image Handling** – Creates BMP images of Maps using colourmaps.
+- **Map Core** – Creates 2D arrays that are used to store DEMs, flow maps, and other map structures
+
+### File tree
+```
+drainage-analysis-cpp
+|  README.md
+|  CMakeLists.txt
+│   License
+│
+└───src
+│   │  main.cpp
+│   └───CLI
+│   │   └───CLI handlers and functions
+│   │   └───REPL handlers and functions
+│   │ 
+│   └───DEM_analysis
+│   │   └───Directional 8 map class and methods
+│   │   └───Flow accumulation class and methods
+│   │   └───Watershed delineation class and methods
+│   │
+│   └───image_handling
+│   │   └───BMP class
+│   │   └───Image export class and methods
+│   │   └───Colour Utilities
+│   │
+│   └───map_core
+│       └───Map class and methods
+│       └───DEM modification functions
+│   
+└───data
+│   └───DEMs
+│   │   └───Digital Elevation Maps
+│   │  
+│   └───colourmaps
+│   │   └───Colourmaps (*.txt)
+│   │
+└───docs
+    └───images
+    │    └───*.bmp
+```
+
 ## Features
 
 - **Flow Direction Algorithms**
