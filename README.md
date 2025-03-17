@@ -61,30 +61,115 @@ Instructions coming soon. Working on a combined CLI / REPL use.
 
 To use the program in Command-Line Interface (CLI) mode:
     ```bash
-    ./drainage_analysis
+    ./drainage-analysis
     ```
 The program accepts several flags:
 
 - **Help:**  Display help information.
+
     ```bash
     ./drainage_analysis -h
     ```
-- **Verbose:** Run in verbose mode to get detailed output.
+
+- **Input:** Input a DEM file
+
     ```bash
-    ./drainage_analysis -v
+    ./drainage_analysis -i filename
     ```
+
+    Accepted file types:
+    - .txt, space separated values
+    - .csv, comma separated values
+    - .bin, binary file with DEM width and height given as an integer header
+
+- **Process:** Run a process on the DEM file
+
+    ```bash
+    ./drainage_analysis -p process
+    ```
+
+    Accepted processes:
+    - Slope
+    - Aspect
+    - d8
+    - dinf
+    - mdf
+
+- **Flow Accumulation:** Calculate flow accumulation based on Process.
+
+    ```bash
+    ./drainage_analysis -fa
+    ```
+
+    Only works with flow direction algorithms: d8, dinf, and mdf.
+    Outputs images of log scaling or saved files of regular flow accumulation.
+    Is incompatible with watershed delineation.
+
+- **Watershed Delineation:** Calculate Watershed Delineation areas from a Process.
+
+    ```bash
+    ./drainage_analysis -w nPoints directory colour
+    ```
+
+    Only works with flow direction algorithms: d8, dinf, and mdf.
+    Output is a series of images (number of points) of watersheds saved to specified directory with chosen colourmap.
+    Images have log scaling applied.
+    Is incompatible with other output methods (-o, -img).
+
+- **File Saving:** Save the processed DEM.
+
+    ```bash
+    ./drainage_analysis -o filename
+    ```
+
+    Export processed DEM as a plain text (e.g. .txt, .csv) or binary file.
+    Accepted file types:
+    - .txt, space separated values
+    - .csv, comma separated values
+    - .bin, binary file with Map width and height given as an integer header
+
+- **Image Export:** Run in verbose mode to get detailed output.
+
+    ```bash
+    ./drainage_analysis -img filename
+    ```
+
+    Export processed DEM as a .bmp image.
+    Can be used in conjunction with colourmaps with the -c flag.
+    
+    
+
+- **Colour:** Run in verbose mode to get detailed output.
+
+    ```bash
+    ./drainage_analysis -c colourCode
+    ```
+
+    Select colour for image export (-img).
+    If not specified, 'g1' (greyscale) is used.
+    Colourmap short codes are found [here](data/colourmaps/).
+
+    Example colourmaps:
+    - 'g1', greyscale where white is the greatest value
+    - 'sf', bluescale where dark blue is the greatest value
+    - 'dw', brown - purple colourmap.
+
+    Credit to Fabio Crameri for 'sf' (seafloor) and 'dw' (drywet) colourmaps.
+
 
 ### REPL / Interactive Mode
 
 REPL mode is activate by the `-int` or `--interactive` flags as so:
 
-    
+    ```bash
     ./drainage_analysis -int
+    ```
 
 or
 
-    
+    ```bash
     ./drainage_analysis --interactive
+    ```
 
 Note: These flags are incompatible with all other flags.
 
