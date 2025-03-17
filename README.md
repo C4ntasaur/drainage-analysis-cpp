@@ -78,9 +78,16 @@ Run the program with flags to specify inputs, processes, and outputs.
 
 | Flag | Description                | Arguments                  | Example                          |
 |------|----------------------------|----------------------------|----------------------------------|
-| `-i` | Input DEM file             | `filename`                 | `-i data/DEMs/example.txt`       |
-| `-p` | Process algorithm          | `d8`/`dinf`/`mdf`          | `-p dinf`                        |
-| `-w` | Watershed delineation      | `nPoints dir colour`       | `-w 3 outputs/ sf`               |
+| `-i`  | Input DEM file            | `<filename>`               | `-i data/DEMs/example.txt`       |
+| `-p`  | Process to run            | `slope`, `aspect`, `d8`, `dinf`, `mdf`          | `-p dinf`                        |
+| `-fa` | Compute flow accumulation | `nPoints dir colour`       | `-w 3 outputs/ sf`               |
+| `-w`  | Watershed delineation     | `nPoints dir colour`       | `-w 3 outputs/ sf`               |
+| `-o`  | Save processed DEM        | `nPoints dir colour`       | `-w 3 outputs/ sf`               |
+| `-img`| Export as BMP image       | `nPoints dir colour`       | `-w 3 outputs/ sf`               |
+| `-c`  | Colourmaps for images     | `nPoints dir colour`       | `-w 3 outputs/ sf`               |
+| `-h`  | Show help                 |           `nPoints dir colour`       | `-w 3 outputs/ sf`               |
+| `-v`  | Enter verbose mode        | `nPoints dir colour`       | `-w 3 outputs/ sf`               |
+|-------|---------------------------|----------------------------|----------------------------------|
 
 
 
