@@ -8,13 +8,14 @@ Created for Applied Programming module in ESE, Imperial College London.
 
 1. [Overview](#overview)
 2. [Features](#features)
-3. [Installation](#installation)
-4. [Usage](#usage)
+3. [Project Structure](#project-structure)
+4. [Installation](#installation)
+5. [Usage](#usage)
     - [CLI Mode](#cli-mode)
     - [REPL Mode](#repl--interactive-mode)
-5. [Examples](#examples)
-6. [Credits](#credits)
-7. [License](#license)
+6. [Examples](#examples)
+7. [Credits](#credits)
+8. [License](#license)
 
 ## Overview
 
@@ -38,6 +39,53 @@ Created for Applied Programming module in ESE, Imperial College London.
 - **Modes**
     - Command-Line Interface (CLI)
     - Interactive REPL (Read-Eval-Print Loop)
+
+## Project Structure
+DrainageAnalysisCPP is structured into **4 core components**:
+- **CLI & REPL Interface** – Handles user interaction.
+- **DEM Analysis** – Manipulates Digital Elevation Models (DEMs) for slope, aspect, flow, and watershed analysis.
+- **Image Handling** – Creates BMP images of Maps using colourmaps.
+- **Map Core** – Creates 2D arrays that are used to store DEMs, flow maps, and other map structures
+
+### File tree
+```
+drainage-analysis-cpp
+|  README.md
+|  CMakeLists.txt
+│   License
+│
+└───src
+│   │  main.cpp
+│   └───CLI
+│   │   └───CLI handlers and functions
+│   │   └───REPL handlers and functions
+│   │ 
+│   └───DEM_analysis
+│   │   └───Directional 8 map class and methods
+│   │   └───Gradient and slope map class and methods
+│   │   └───Flow accumulation class and methods
+│   │   └───Watershed delineation class and methods
+│   │
+│   └───image_handling
+│   │   └───BMP class
+│   │   └───Image export class and methods
+│   │   └───Colour Utilities
+│   │
+│   └───map_core
+│       └───Map class and methods
+│       └───DEM modification functions
+│   
+└───data
+│   └───DEMs
+│   │   └───Digital Elevation Maps
+│   │  
+│   └───colourmaps
+│   │   └───Colourmaps (*.txt)
+│   │
+└───docs
+    └───images
+    │    └───*.bmp
+```
 
 ## Installation
 
@@ -79,7 +127,7 @@ Run the program with flags to specify inputs, processes, and outputs.
 | Flag | Description                | Arguments                             | Example                          |
 |------|----------------------------|---------------------------------------|----------------------------------|
 | `-i`  | Input DEM file            | `<filename>`                          | `-i data/DEMs/example.txt`       |
-| `-p`  | Process to run            | `slope`, `aspect`, `d8`, `dinf`, `mdf`| `-p dinf`                        |
+| `-p`  | Process to run            | [Processes](#valid-cli-processes)| `-p dinf`                        |
 | `-fa` | Compute flow accumulation | None                                  | `-fa`                            |
 | `-w`  | Watershed delineation     | `<num_points> <output_dir> <colourmap>`,  `[Colour Codes](#colourmaps)`                  | `-w 3 outputs/ sf`               |
 | `-o`  | Save processed DEM        | `<filename>`                          | `-o output.csv`                  |
@@ -92,7 +140,8 @@ Note:
 
 - **D8 (`d8`) and D-Infinity (`dinf`):** By default these processes return output flow maps, Directional 8 and Aspect Maps respectively. Including the `-fa` flag computes flow accumulation instead.
 - **Multi-Directional Flow (`mdf`)** does not output a flow map by default. Use `-fa` or `-w` to generate results.
-#### Valid Processes:
+
+#### Valid CLI Processes:
 - `slope`: Compute slope.
 - `aspect`: Compute aspect.
 - `d8`: Find the Directional 8 Map. Allows for flow accumulation (`-fa`) and watershed (`-w`).
@@ -120,13 +169,13 @@ Start an interactive session:
 | Command   | Description | Arguments                | Example
 |-----------|----------------------------|------------|-------------------------|
 | `load`    | Load a DEM file   | `<filename>`          | `load ../data/DEMs/DTM50.txt `      |
-| `process` | Run a process. Check [Valid Processes](#valid-processes) | `[processes]`         | `process aspect`                    |
+| `process` | Run a process. Check [Valid Processes](#valid-repl-processes) | `[processes]`         | `process aspect`                    |
 | `save`    | Save processed data | `<filename>`       | `save output.txt`                   |
 | `export`  | Export as BMP            | `<filename>` | `export flow.bmp g1`                  |
 | `help`    | Show commands      | None        | `help`                          |
 | `exit`    | Quit REPL           | None      | `quit`                          |
 
-#### Valid Processes:
+#### Valid REPL Processes:
 - `slope`: Compute slope.
 - `aspect`: Compute aspect.
 - `d8`: Find the Directional 8 Map.
@@ -154,8 +203,9 @@ Watershed images saved to outputs/
     ./drainage-analysis -i data/DEMs/DTM50.txt -p mdf -fa -img flow.bmp -c g2
     ```
     Exports a greyscale BMP of flow accumulation.
-
-    ![Flow Accumulation](docs/images/flow_accumulation_mdf.bmp)
+    <div style="display: flex; justify-content: space-between; gap: 10px">
+        <img src="docs/images/flow_accumulation_mdf.bmp" alt="Watershed Image 1" style="width: 32%">
+    </div>
 
 3. **Watershed Delineation with D8:**
     ```bash
