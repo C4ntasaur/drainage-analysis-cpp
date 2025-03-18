@@ -2,7 +2,7 @@
  * @file argumentParser.cpp
  * @author Ollie
  * @brief Argument parser for CLI arguments
- * @version 1.0.0
+ * @version 1.0.1
  * @date 2025-03-13
  * 
  * @copyright Copyright (c) 2025
@@ -22,6 +22,7 @@ void printHelp() {
     std::cout << "-p <process> : Specify the process to apply (e.g., 'flow', 'slope')" << std::endl;
     std::cout << "-fa <flow_accumulation> : If selected will run flow accumulation analysis" << std::endl;
     std::cout << "-w <watershed> : If selected will run watershed analysis" << std::endl;
+    std::cout << "Requires: number of points, out directory, colourmap" << std::endl;
     std::cout << "-o <output_file> : Specify output file (.txt, .csv, .bin)" << std::endl;
     std::cout << "-img <image_file> : Specify output image (.bmp)" << std::endl;
     std::cout << "-c <colour> : Specify colour palette for image output" << std::endl;
