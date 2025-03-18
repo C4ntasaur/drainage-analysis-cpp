@@ -247,6 +247,12 @@ void exportData(Map<double>* flowMap, Map<int>* D8Map, Map<double>* aspectMap, M
         std::cerr << "Error: Usage - export <image_file> [colour_type]\n";
         return;
     }
+
+    std::string imageFileType = getFileExtension(imageFile);
+    if (imageFileType.empty() || imageFileType != "bmp") {
+        std::cerr << "Error: The image file does not have a .bmp extension.\n";
+        return;
+    }
     
     // if no colour given, use greyscale as default
     if (strlen(colourType) == 0) {

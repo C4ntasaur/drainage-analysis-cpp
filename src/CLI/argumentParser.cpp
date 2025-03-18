@@ -196,7 +196,6 @@ bool parseArguments(int argc, char* argv[],
                 strcpy(image_file, argv[i + 1]);
                 if (!has_extension(image_file, "bmp")) {
                     std::cerr << "Error: Image file must have a .bmp extension." << std::endl;
-                    delete[] image_file;
                     return false;
                 }
                 i++;  // Skip the next argument (image filename)
