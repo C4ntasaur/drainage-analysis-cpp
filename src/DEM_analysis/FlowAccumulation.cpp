@@ -120,9 +120,9 @@ void FlowAccumulator<elevationT, D8T, DinfT>::accumulateDinf(Map<elevationT>& _f
         }
     }
 
-    // Sort by elevation (descending)
+    // Sort by elevation
     std::sort(cells.begin(), cells.end(), [](const auto& a, const auto& b) {
-        return std::get<0>(a) > std::get<0>(b); // Higher elevation first
+        return std::get<0>(a) > std::get<0>(b); // descending
     });
 
     // Create a temporary map to store updates
@@ -213,10 +213,10 @@ FlowAccumulator<elevationT, D8T, DinfT>::getNearestTwoDirections(double aspect) 
         {315.0, {-1, -1}} // NW
     }};
 
-    // Handle wrapping (aspect 315-360)
+    // Handle aspect 315-360
     if (aspect >= 315.0) {
-        double w1 = (aspect - 315.0) / (360.0 - 315.0);  // Normalized weight for North
-        double w2 = 1.0 - w1;  // Remaining weight for NW
+        double w1 = (aspect - 315.0) / (360.0 - 315.0); // Normalized weight
+        double w2 = 1.0 - w1; // Remaining weight
         return std::make_tuple(D8_DIRECTIONS[0].second, D8_DIRECTIONS[7].second, w1, w2);
     }
 
@@ -234,7 +234,7 @@ FlowAccumulator<elevationT, D8T, DinfT>::getNearestTwoDirections(double aspect) 
         }
     }
 
-    // This should never be reached now
+    // This should NOT happen
     std::cerr << "Unexpected aspect value encountered: " << aspect << std::endl;
     return std::make_tuple(D8_DIRECTIONS[0].second, D8_DIRECTIONS[7].second, 1.0, 0.0);
 }
@@ -254,7 +254,7 @@ void FlowAccumulator<elevationT, D8T, DinfT>::accumulateMDF(Map<elevationT>& _fl
     std::vector<std::tuple<elevationT, int, int>> cells;
     for (int y = 0; y < _height; y++) {
         for (int x = 0; x < _width; x++) {
-            elevationT elevation = _elevationMap.getData(x, y); // assuming you have elevationMap
+            elevationT elevation = _elevationMap.getData(x, y);
             cells.emplace_back(elevation, x, y);
         }
     }

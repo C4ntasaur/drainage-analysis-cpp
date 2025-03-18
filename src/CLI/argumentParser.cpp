@@ -61,7 +61,7 @@ bool parseArguments(int argc, char* argv[],
         // Check input
         else if (strcmp(argv[i], "-i") == 0 || strcmp(argv[i], "--input") == 0) {
             if (i + 1 < argc) {
-                // Free previously allocated memory if it exists
+                // Free previously allocated memory
                 if (input_file) {
                     delete[] input_file;
                 }
@@ -146,29 +146,29 @@ bool parseArguments(int argc, char* argv[],
                     return false;
                 }
         
-                // The next argument should be the directory path (required)
-                watershed_directory = new char[strlen(argv[i + 1]) + 1];  // Store directory or filepath as string
+                // Next argument is directory
+                watershed_directory = new char[strlen(argv[i + 1]) + 1]; // Store directory
                 strcpy(watershed_directory, argv[i + 1]);
                 i++; // Skip to next argument
                 std::cout << "Storing watershed images in directory: " << watershed_directory << std::endl;
         
-                // Now, check if there's a color argument
+                // Colour arguments
                 if (i + 1 < argc) {
-                    // Check if a color argument is provided, and handle it
-                    watershed_colour = new char[strlen(argv[i + 1]) + 1];  // Allocate space for color type
+                    // Check for colour argument
+                    watershed_colour = new char[strlen(argv[i + 1]) + 1]; // Allocate space for colour type
                     strcpy(watershed_colour, argv[i + 1]);
                     i++; // Skip to next argument
                     std::cout << "Using watershed color: " << watershed_colour << std::endl;
                 }
                 else {
-                    // If no color argument provided, default to "g1"
-                    watershed_colour = new char[3];  // Allocate space for default color
-                    strcpy(watershed_colour, "g1");  // Set default color type to "g1"
-                    std::cout << "No watershed color provided. Using default color: " << watershed_colour << std::endl;
+                    // If no colour argument provided, default to "g1"
+                    watershed_colour = new char[3]; // Allocate space
+                    strcpy(watershed_colour, "g1"); // Set default colour type to "g1"
+                    std::cout << "No watershed color provided. Using default colour: " << watershed_colour << std::endl;
                 }
             }
             else {
-                std::cerr << "Error: -w flag requires 3 arguments: <Pour Points> <Directory> <Color (optional)>" << std::endl;
+                std::cerr << "Error: -w flag requires 3 arguments: <Pour Points> <Directory> <Colour (optional)>" << std::endl;
                 return false;
             }
         }

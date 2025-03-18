@@ -44,7 +44,6 @@ public:
     Map<int> getMap(void);
 
 private:
-    /// All declared with '_' prefix to indicate private member.
     int _width, _height;
     Map<T> _elevationData;
     Map<int> _flowDirections;

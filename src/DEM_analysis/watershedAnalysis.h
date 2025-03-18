@@ -65,7 +65,7 @@ public:
     /**
      * @brief Delegation method for watershed identification.
      * 
-     * @param Point Pour Point at location (x, y )as std::pair<x, y>
+     * @param Point Pour Point at location (x, y) as std::pair<x, y>
      * @param method Accepts: "mdf", "d8", "dinf"
      * @return Map<elevationT> 
      */

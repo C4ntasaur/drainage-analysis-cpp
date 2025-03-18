@@ -141,8 +141,6 @@ void processData(Map<double>* elevationMap, Map<int>*& D8Map, Map<double>*& flow
         std::cout << "Slope analysis completed.\n";
     }
     else if (strcmp(processType, "d8_flow") == 0) {
-        // Finds D8 flow accumulation map
-
         // Find D8 direction map
         D8FlowAnalyser analyser(*elevationMap);
         analyser.analyseFlow();
